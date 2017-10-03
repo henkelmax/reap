@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 public class Harvester {
 
 	public static boolean harvest(BlockPos pos, EntityPlayer player) {
-		World world = player.worldObj;
+		World world = player.world;
 
 		IBlockState state = world.getBlockState(pos);
 
