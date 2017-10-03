@@ -1,6 +1,5 @@
 package de.maxhenkel.reap;
 
-import java.util.List;
 import de.maxhenkel.reap.config.BlockSelector;
 import de.maxhenkel.reap.config.Config;
 import net.minecraft.block.Block;
@@ -11,6 +10,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -41,7 +41,8 @@ public class Harvester {
 			return true;
 		}
 
-		List<ItemStack> drops = blockClicked.getDrops(world, pos, state, 0);
+		NonNullList<ItemStack> drops = NonNullList.create();
+		blockClicked.getDrops(drops, world, pos, state, 0);
 
 		IBlockState newState = blockClicked.getDefaultState();
 
