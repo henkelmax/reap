@@ -1,0 +1,16 @@
+[
+{
+  "modid": "reap",
+  "name": "Reap Mod",
+  "description": "Reap Mod",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "http://maxhenkel.de/",
+  "updateUrl": "http://maxhenkel.de/update/reap.json",
+  "authorList": ["Max Henkel"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
