@@ -1,10 +1,9 @@
 package de.maxhenkel.reap;
 
 import java.util.ArrayList;
-
 import de.maxhenkel.reap.config.BlockSelector;
-import de.maxhenkel.reap.config.Config;
 import de.maxhenkel.reap.config.ItemStackSelector;
+import de.maxhenkel.reap.proxy.CommonProxy;
 import net.minecraft.block.BlockLog;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -44,7 +43,7 @@ public class TreeHarvester {
 			return;
 		}
 
-		if (!ItemStackSelector.contains(Config.allowedTreeTools, heldItem)) {
+		if (!ItemStackSelector.contains(CommonProxy.allowedTreeTools, heldItem)) {
 			return;
 		}
 
@@ -114,7 +113,7 @@ public class TreeHarvester {
 	
 	private boolean isLog(BlockPos pos) {
 		IBlockState b = world.getBlockState(pos);
-		if (BlockSelector.contains(Config.logTypes, b)) {
+		if (BlockSelector.contains(CommonProxy.logTypes, b)) {
 			if (getMeta(pos) == this.meta) {
 				return true;
 			} else {
@@ -127,7 +126,7 @@ public class TreeHarvester {
 
 	private boolean isGround(BlockPos pos) {
 		IBlockState b = world.getBlockState(pos);
-		if (BlockSelector.contains(Config.groundTypes, b)) {
+		if (BlockSelector.contains(CommonProxy.groundTypes, b)) {
 			return true;
 		} else {
 			return false;

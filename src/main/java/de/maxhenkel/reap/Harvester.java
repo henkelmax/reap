@@ -1,7 +1,7 @@
 package de.maxhenkel.reap;
 
 import de.maxhenkel.reap.config.BlockSelector;
-import de.maxhenkel.reap.config.Config;
+import de.maxhenkel.reap.proxy.CommonProxy;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.block.BlockHorizontal;
@@ -23,7 +23,7 @@ public class Harvester {
 
 		Block blockClicked = state.getBlock();
 
-		if (!BlockSelector.contains(Config.reapWhitelist, state)) {
+		if (!BlockSelector.contains(CommonProxy.reapWhitelist, state)) {
 			return false;
 		}
 
