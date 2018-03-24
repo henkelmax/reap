@@ -14,6 +14,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public class Harvester {
 
 	public static boolean harvest(BlockPos pos, EntityPlayer player) {
@@ -41,8 +43,7 @@ public class Harvester {
 			return true;
 		}
 
-		NonNullList<ItemStack> drops = NonNullList.create();
-		blockClicked.getDrops(drops, world, pos, state, 0);
+		List<ItemStack> drops = blockClicked.getDrops(world, pos, state, 0);
 
 		IBlockState newState = blockClicked.getDefaultState();
 
