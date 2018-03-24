@@ -10,7 +10,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -19,7 +18,7 @@ import java.util.List;
 public class Harvester {
 
 	public static boolean harvest(BlockPos pos, EntityPlayer player) {
-		World world = player.world;
+		World world = player.worldObj;
 
 		IBlockState state = world.getBlockState(pos);
 
