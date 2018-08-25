@@ -29,6 +29,10 @@ public class TreeHarvester {
 
 	public void harvest() {
 
+		if(!CommonProxy.enableTreeHarvest){
+			return;
+		}
+
 		if(heldItem==null){
 			return;
 		}
