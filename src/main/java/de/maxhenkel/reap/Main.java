@@ -1,46 +1,43 @@
 package de.maxhenkel.reap;
 
-import de.maxhenkel.reap.proxy.CommonProxy;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-@Mod(modid = Main.MODID, version = Main.VERSION, acceptedMinecraftVersions=Main.MC_VERSION, updateJSON=Main.UPDATE_JSON)
-public class Main{
-	
+@Mod(Main.MODID)
+public class Main {
+
     public static final String MODID = "reap";
-    public static final String VERSION = "1.5.2";
-    public static final String MC_VERSION = "[1.12.2]";
-	public static final String UPDATE_JSON = "http://maxhenkel.de/update/reap.json";
 
-	@Instance
     private static Main instance;
 
-	@SidedProxy(clientSide="de.maxhenkel.reap.proxy.ClientProxy", serverSide="de.maxhenkel.reap.proxy.CommonProxy")
-    public static CommonProxy proxy;
-    
-    @EventHandler
-    public void preinit(FMLPreInitializationEvent event){
-		instance=this;
-		proxy.preinit(event);
+    public Main() {
+        instance = this;
+
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::configEvent);
+
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_SPEC);
     }
-    
-    @EventHandler
-    public void init(FMLInitializationEvent event){
-    	 proxy.init(event);
+
+    @SubscribeEvent
+    public void commonSetup(FMLCommonSetupEvent event) {
+        MinecraftForge.EVENT_BUS.register(new Events());
     }
-    
-    @EventHandler
-    public void postinit(FMLPostInitializationEvent event){
-		proxy.postinit(event);
+
+    @SubscribeEvent
+    public void configEvent(ModConfig.ModConfigEvent event) {
+        if (event.getConfig().getType() == ModConfig.Type.SERVER) {
+            Config.loadServer();
+        }
     }
 
     public static Main instance() {
-		return instance;
-	}
-    
+        return instance;
+    }
+
 }

@@ -1,7 +1,6 @@
 {
     "pack": {
         "description": "reap resources",
-        "pack_format": 3,
-        "_comment": ""
+        "pack_format": 4
     }
 }

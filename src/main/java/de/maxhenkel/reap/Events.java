@@ -2,12 +2,14 @@ package de.maxhenkel.reap;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.IWorld;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.BlockEvent.BreakEvent;
-import net.minecraftforge.fml.common.eventhandler.Event.Result;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
+@Mod.EventBusSubscriber(modid = Main.MODID)
 public class Events {
 
 	@SubscribeEvent
@@ -27,18 +29,18 @@ public class Events {
 		boolean success = Harvester.harvest(clickedBlock, player);
 
 		if (success && event.isCancelable()) {
-			event.setResult(Result.DENY);
+			event.setResult(Event.Result.DENY);
 			event.setCanceled(true);
 		}
 
 	}
 
 	@SubscribeEvent
-	public void onBlockBreak(BreakEvent event) {
-		World world = event.getWorld();
+	public void onBlockBreak(BlockEvent.BreakEvent event) {
+		IWorld world = event.getWorld();
 		EntityPlayer player = event.getPlayer();
 
-		if (event.getWorld().isRemote || player == null || event.isCanceled() || player.capabilities.isCreativeMode) {
+		if (event.getWorld().isRemote() || player == null || event.isCanceled() || player.abilities.isCreativeMode) {
 			return;
 		}
 

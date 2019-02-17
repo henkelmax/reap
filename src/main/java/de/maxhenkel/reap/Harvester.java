@@ -1,7 +1,5 @@
 package de.maxhenkel.reap;
 
-import de.maxhenkel.reap.config.BlockSelector;
-import de.maxhenkel.reap.proxy.CommonProxy;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.block.BlockHorizontal;
@@ -16,61 +14,52 @@ import net.minecraft.world.World;
 
 public class Harvester {
 
-	public static boolean harvest(BlockPos pos, EntityPlayer player) {
-		World world = player.world;
+    public static boolean harvest(BlockPos pos, EntityPlayer player) {
+        World world = player.world;
 
-		IBlockState state = world.getBlockState(pos);
+        IBlockState state = world.getBlockState(pos);
 
-		Block blockClicked = state.getBlock();
+        Block blockClicked = state.getBlock();
 
-		if (!BlockSelector.contains(CommonProxy.reapWhitelist, state)) {
-			return false;
-		}
+        if (Config.reapWhitelist.stream().noneMatch(b -> b.equals(state.getBlock()))) {
+            return false;
+        }
 
-		if (!(blockClicked instanceof IGrowable)) {
-			return false;
-		}
+        if (!(blockClicked instanceof IGrowable)) {
+            return false;
+        }
 
-		IGrowable growble = (IGrowable) blockClicked;
+        IGrowable growble = (IGrowable) blockClicked;
 
-		if (growble.canGrow(world, pos, state, world.isRemote)) {
-			return false;
-		}
-		
-		if(world.isRemote){
-			return true;
-		}
+        if (growble.canGrow(world, pos, state, world.isRemote)) {
+            return false;
+        }
 
-		NonNullList<ItemStack> drops = NonNullList.create();
-		blockClicked.getDrops(drops, world, pos, state, 0);
+        if (world.isRemote) {
+            return true;
+        }
 
-		IBlockState newState = blockClicked.getDefaultState();
+        NonNullList<ItemStack> drops = NonNullList.create();
+        blockClicked.getDrops(state, drops, world, pos, 0);
+        drops.add(new ItemStack(blockClicked.getItemDropped(state, world, pos, 0).asItem()));
 
-		if (state.getProperties().containsKey(BlockHorizontal.FACING)) {
-			newState = newState.withProperty(BlockHorizontal.FACING, state.getValue(BlockHorizontal.FACING));
-		}
+        IBlockState newState = blockClicked.getDefaultState();
 
-		if (state.getProperties().containsKey(BlockCrops.AGE)) {
-			newState=state.withProperty(BlockCrops.AGE, 0);
-		}
+        if (state.getProperties().stream().anyMatch(p -> p.equals(BlockHorizontal.HORIZONTAL_FACING))) {
+            newState = newState.with(BlockHorizontal.HORIZONTAL_FACING, state.get(BlockHorizontal.HORIZONTAL_FACING));
+        }
 
-		world.setBlockState(pos, newState);
+        if (state.getProperties().stream().anyMatch(p -> p.equals(BlockCrops.AGE))) {
+            newState = state.with(BlockCrops.AGE, 0);
+        }
 
-		for (ItemStack stack : drops) {
-			InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-		}
+        world.setBlockState(pos, newState);
 
-		return true;
-	}
+        for (ItemStack stack : drops) {
+            InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+        }
 
-	public static boolean contains(Block[] blocks, Block b) {
-		for (Block block : blocks) {
-			if (block.equals(b)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
+        return true;
+    }
 
 }
