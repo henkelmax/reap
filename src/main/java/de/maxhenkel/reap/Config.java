@@ -7,6 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.IRegistry;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 import javax.annotation.Nullable;
 import java.util.*;
@@ -100,7 +101,7 @@ public class Config {
         try {
             String[] split = name.split(":");
             if (split.length == 2) {
-                Item i = IRegistry.field_212630_s.get(new ResourceLocation(split[0], split[1]));
+                Item i = ForgeRegistries.ITEMS.getValue(new ResourceLocation(split[0], split[1]));
                 if (i.equals(Items.AIR)) {
                     return null;
                 } else {
