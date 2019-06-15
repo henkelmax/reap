@@ -13,11 +13,7 @@ public class Main {
 
     public static final String MODID = "reap";
 
-    private static Main instance;
-
     public Main() {
-        instance = this;
-
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::configEvent);
 
@@ -35,9 +31,4 @@ public class Main {
             Config.loadServer();
         }
     }
-
-    public static Main instance() {
-        return instance;
-    }
-
 }

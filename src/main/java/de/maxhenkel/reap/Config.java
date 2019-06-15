@@ -1,14 +1,14 @@
 package de.maxhenkel.reap;
 
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.IRegistry;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
+
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -62,7 +62,7 @@ public class Config {
                     .comment("")
                     .translation("ground_types")
                     .define("ground_types", Arrays.asList(
-                            Blocks.DIRT, Blocks.GRASS
+                            Blocks.DIRT, Blocks.GRASS_BLOCK
                     ).stream().map(b -> b.getRegistryName().toString()).collect(Collectors.toList()));
             allowedTreeTools = builder
                     .comment("")
@@ -82,7 +82,7 @@ public class Config {
         try {
             String[] split = name.split(":");
             if (split.length == 2) {
-                Block b = IRegistry.field_212618_g.get(new ResourceLocation(split[0], split[1]));
+                Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(split[0], split[1]));
                 if (isAirBlock(b)) {
                     return null;
                 } else {

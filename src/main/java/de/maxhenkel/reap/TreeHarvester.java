@@ -1,12 +1,13 @@
 package de.maxhenkel.reap;
 
 import java.util.ArrayList;
-import net.minecraft.block.BlockLog;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+
+import net.minecraft.block.BlockState;
+import net.minecraft.block.LogBlock;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -14,11 +15,11 @@ import net.minecraft.world.World;
 public class TreeHarvester {
 
     private BlockPos pos;
-    private EntityPlayer player;
+    private PlayerEntity player;
     private IWorld world;
     private ItemStack heldItem;
 
-    public TreeHarvester(BlockPos pos, EntityPlayer player, IWorld world) {
+    public TreeHarvester(BlockPos pos, PlayerEntity player, IWorld world) {
         this.pos = pos;
         this.player = player;
         this.world = world;
@@ -57,7 +58,7 @@ public class TreeHarvester {
             return;
         }
 
-        if (!world.getBlockState(pos).get(BlockLog.AXIS).equals(EnumFacing.Axis.Y)) {
+        if (!world.getBlockState(pos).get(LogBlock.AXIS).equals(Direction.Axis.Y)) {
             return;
         }
 
@@ -104,12 +105,12 @@ public class TreeHarvester {
     }
 
     private boolean isLog(BlockPos pos) {
-        IBlockState b = world.getBlockState(pos);
+        BlockState b = world.getBlockState(pos);
         return Config.logTypes.stream().anyMatch(l -> l.equals(b.getBlock()));
     }
 
     private boolean isGround(BlockPos pos) {
-        IBlockState b = world.getBlockState(pos);
+        BlockState b = world.getBlockState(pos);
         return Config.groundTypes.stream().anyMatch(l -> l.equals(b.getBlock()));
     }
 

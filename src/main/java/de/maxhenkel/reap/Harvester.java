@@ -1,23 +1,22 @@
 package de.maxhenkel.reap;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockCrops;
-import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.IGrowable;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.block.*;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.storage.loot.*;
+
+import java.util.List;
 
 public class Harvester {
 
-    public static boolean harvest(BlockPos pos, EntityPlayer player) {
+    public static boolean harvest(BlockPos pos, PlayerEntity player) {
         World world = player.world;
 
-        IBlockState state = world.getBlockState(pos);
+        BlockState state = world.getBlockState(pos);
 
         Block blockClicked = state.getBlock();
 
@@ -35,22 +34,22 @@ public class Harvester {
             return false;
         }
 
-        if (world.isRemote) {
+        if (world.isRemote || !(world instanceof ServerWorld)) {
             return true;
         }
 
-        NonNullList<ItemStack> drops = NonNullList.create();
-        blockClicked.getDrops(state, drops, world, pos, 0);
-        drops.add(new ItemStack(blockClicked.getItemDropped(state, world, pos, 0).asItem()));
+        LootContext.Builder context = new LootContext.Builder((ServerWorld) world).withParameter(LootParameters.field_216286_f, pos).withParameter(LootParameters.field_216287_g, state).withParameter(LootParameters.field_216281_a, player).withParameter(LootParameters.field_216289_i, ItemStack.EMPTY);
 
-        IBlockState newState = blockClicked.getDefaultState();
+        List<ItemStack> drops = state.getDrops(context);
 
-        if (state.getProperties().stream().anyMatch(p -> p.equals(BlockHorizontal.HORIZONTAL_FACING))) {
-            newState = newState.with(BlockHorizontal.HORIZONTAL_FACING, state.get(BlockHorizontal.HORIZONTAL_FACING));
+        BlockState newState = blockClicked.getDefaultState();
+
+        if (state.getProperties().stream().anyMatch(p -> p.equals(HorizontalBlock.HORIZONTAL_FACING))) {
+            newState = newState.with(HorizontalBlock.HORIZONTAL_FACING, state.get(HorizontalBlock.HORIZONTAL_FACING));
         }
 
-        if (state.getProperties().stream().anyMatch(p -> p.equals(BlockCrops.AGE))) {
-            newState = state.with(BlockCrops.AGE, 0);
+        if (state.getProperties().stream().anyMatch(p -> p.equals(CropsBlock.AGE))) {
+            newState = state.with(CropsBlock.AGE, 0);
         }
 
         world.setBlockState(pos, newState);
