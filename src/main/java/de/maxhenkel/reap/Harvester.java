@@ -38,7 +38,7 @@ public class Harvester {
             return true;
         }
 
-        LootContext.Builder context = new LootContext.Builder((ServerWorld) world).withParameter(LootParameters.field_216286_f, pos).withParameter(LootParameters.field_216287_g, state).withParameter(LootParameters.field_216281_a, player).withParameter(LootParameters.field_216289_i, ItemStack.EMPTY);
+        LootContext.Builder context = new LootContext.Builder((ServerWorld) world).withParameter(LootParameters.POSITION, pos).withParameter(LootParameters.BLOCK_STATE, state).withParameter(LootParameters.THIS_ENTITY, player).withParameter(LootParameters.TOOL, ItemStack.EMPTY);
 
         List<ItemStack> drops = state.getDrops(context);
 

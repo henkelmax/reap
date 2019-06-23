@@ -40,7 +40,7 @@ public class Events {
         IWorld world = event.getWorld();
         PlayerEntity player = event.getPlayer();
 
-        if (event.getWorld().isRemote() || player == null || event.isCanceled() || player.playerAbilities.isCreativeMode) {
+        if (event.getWorld().isRemote() || player == null || event.isCanceled() || player.abilities.isCreativeMode) {
             return;
         }
 
