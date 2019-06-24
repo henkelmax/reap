@@ -1,1 +1,1 @@
-- Updated forge mappings
+- Fixed bug crashing the game on loading

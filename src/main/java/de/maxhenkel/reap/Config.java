@@ -50,26 +50,40 @@ public class Config {
                     .comment("")
                     .translation("reap_whitelist")
                     .define("reap_whitelist", Arrays.asList(
-                            Blocks.POTATOES, Blocks.CARROTS, Blocks.WHEAT, Blocks.BEETROOTS, Blocks.COCOA
-                    ).stream().map(b -> b.getRegistryName().toString()).collect(Collectors.toList()));
+                            "minecraft:potatoes",
+                            "minecraft:carrots",
+                            "minecraft:wheat",
+                            "minecraft:beetroots",
+                            "minecraft:cocoa"
+                    ));
             logTypes = builder
                     .comment("")
                     .translation("log_types")
                     .define("log_types", Arrays.asList(
-                            Blocks.ACACIA_LOG, Blocks.BIRCH_LOG, Blocks.DARK_OAK_LOG, Blocks.JUNGLE_LOG, Blocks.OAK_LOG, Blocks.SPRUCE_LOG
-                    ).stream().map(b -> b.getRegistryName().toString()).collect(Collectors.toList()));
+                            "minecraft:acacia_log",
+                            "minecraft:birch_log",
+                            "minecraft:dark_oak_log",
+                            "minecraft:jungle_log",
+                            "minecraft:oak_log",
+                            "minecraft:spruce_log"
+                    ));
             groundTypes = builder
                     .comment("")
                     .translation("ground_types")
                     .define("ground_types", Arrays.asList(
-                            Blocks.DIRT, Blocks.GRASS_BLOCK
-                    ).stream().map(b -> b.getRegistryName().toString()).collect(Collectors.toList()));
+                            "minecraft:dirt",
+                            "minecraft:grass_block"
+                    ));
             allowedTreeTools = builder
                     .comment("")
                     .translation("allowed_tree_tools")
                     .define("allowed_tree_tools", Arrays.asList(
-                            Items.WOODEN_AXE, Items.GOLDEN_AXE, Items.STONE_AXE, Items.IRON_AXE, Items.DIAMOND_AXE
-                    ).stream().map(i -> i.getRegistryName().toString()).collect(Collectors.toList()));
+                            "minecraft:wooden_axe",
+                            "minecraft:golden_axe",
+                            "minecraft:stone_axe",
+                            "minecraft:iron_axe",
+                            "minecraft:diamond_axe"
+                    ));
             treeHarvest = builder
                     .comment("")
                     .translation("tree_harvest")
