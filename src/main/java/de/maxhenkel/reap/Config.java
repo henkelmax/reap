@@ -95,11 +95,7 @@ public class Config {
             String[] split = name.split(":");
             if (split.length == 2) {
                 Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(split[0], split[1]));
-                if (isAirBlock(b)) {
-                    return null;
-                } else {
-                    return b;
-                }
+                return b;
             } else {
                 return null;
             }
@@ -114,24 +110,12 @@ public class Config {
             String[] split = name.split(":");
             if (split.length == 2) {
                 Item i = ForgeRegistries.ITEMS.getValue(new ResourceLocation(split[0], split[1]));
-                if (i.getRegistryName().getNamespace().equals("minecraft") && i.getRegistryName().getPath().equals("air")) {
-                    return null;
-                } else {
-                    return i;
-                }
+                return i;
             } else {
                 return null;
             }
         } catch (Exception e) {
             return null;
         }
-    }
-
-    public static boolean isAirBlock(Block block) {
-        return checkBlock(block, "minecraft", "air") || checkBlock(block, "minecraft", "cave_air") || checkBlock(block, "minecraft", "void_air");
-    }
-
-    public static boolean checkBlock(Block block, String domain, String path) {
-        return block.getRegistryName().getNamespace().equals(domain) && block.getRegistryName().getPath().equals(path);
     }
 }
