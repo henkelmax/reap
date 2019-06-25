@@ -1,9 +1,7 @@
 package de.maxhenkel.reap;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
-import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -116,7 +114,7 @@ public class Config {
             String[] split = name.split(":");
             if (split.length == 2) {
                 Item i = ForgeRegistries.ITEMS.getValue(new ResourceLocation(split[0], split[1]));
-                if (i.equals(Items.AIR)) {
+                if (i.getRegistryName().getNamespace().equals("minecraft") && i.getRegistryName().getPath().equals("air")) {
                     return null;
                 } else {
                     return i;
@@ -130,6 +128,10 @@ public class Config {
     }
 
     public static boolean isAirBlock(Block block) {
-        return block.equals(Blocks.AIR) || block.equals(Blocks.CAVE_AIR) || block.equals(Blocks.VOID_AIR);
+        return checkBlock(block, "minecraft", "air") || checkBlock(block, "minecraft", "cave_air") || checkBlock(block, "minecraft", "void_air");
+    }
+
+    public static boolean checkBlock(Block block, String domain, String path) {
+        return block.getRegistryName().getNamespace().equals(domain) && block.getRegistryName().getPath().equals(path);
     }
 }
