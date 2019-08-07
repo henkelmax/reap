@@ -15,7 +15,6 @@ public class Main {
 
     public Main() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::configEvent);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_SPEC);
     }
@@ -25,10 +24,4 @@ public class Main {
         MinecraftForge.EVENT_BUS.register(new Events());
     }
 
-    @SubscribeEvent
-    public void configEvent(ModConfig.ModConfigEvent event) {
-        if (event.getConfig().getType() == ModConfig.Type.SERVER) {
-            Config.loadServer();
-        }
-    }
 }

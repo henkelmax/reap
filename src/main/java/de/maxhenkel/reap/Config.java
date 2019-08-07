@@ -16,81 +16,84 @@ public class Config {
     public static final ServerConfig SERVER;
     public static final ForgeConfigSpec SERVER_SPEC;
 
+    private static ForgeConfigSpec.ConfigValue<List<? extends String>> reapWhitelist;
+    private static ForgeConfigSpec.ConfigValue<List<? extends String>> logTypes;
+    private static ForgeConfigSpec.ConfigValue<List<? extends String>> groundTypes;
+    private static ForgeConfigSpec.ConfigValue<List<? extends String>> allowedTreeTools;
+    private static ForgeConfigSpec.BooleanValue treeHarvest;
+
     static {
         Pair<ServerConfig, ForgeConfigSpec> specPairServer = new ForgeConfigSpec.Builder().configure(ServerConfig::new);
         SERVER_SPEC = specPairServer.getRight();
         SERVER = specPairServer.getLeft();
     }
 
-    public static List<Block> reapWhitelist = new ArrayList<>();
-    public static List<Block> logTypes = new ArrayList<>();
-    public static List<Block> groundTypes = new ArrayList<>();
-    public static List<Item> allowedTreeTools = new ArrayList<>();
-    public static boolean treeHarvest = true;
+    public static List<Block> getReapWhitelist() {
+        return reapWhitelist.get().stream().map(s -> getBlock(s)).filter(b -> b != null).collect(Collectors.toList());
+    }
 
-    public static void loadServer() {
-        reapWhitelist = SERVER.reapWhitelist.get().stream().map(s -> getBlock(s)).filter(b -> b != null).collect(Collectors.toList());
-        logTypes = SERVER.logTypes.get().stream().map(s -> getBlock(s)).filter(b -> b != null).collect(Collectors.toList());
-        groundTypes = SERVER.groundTypes.get().stream().map(s -> getBlock(s)).filter(b -> b != null).collect(Collectors.toList());
-        allowedTreeTools = SERVER.allowedTreeTools.get().stream().map(s -> getItem(s)).filter(b -> b != null).collect(Collectors.toList());
-        treeHarvest = SERVER.treeHarvest.get();
+    public static List<Block> getLogTypes() {
+        return logTypes.get().stream().map(s -> getBlock(s)).filter(b -> b != null).collect(Collectors.toList());
+    }
+
+    public static List<Block> getGroundTypes() {
+        return groundTypes.get().stream().map(s -> getBlock(s)).filter(b -> b != null).collect(Collectors.toList());
+    }
+
+    public static List<Item> getAllowedTreeTools() {
+        return allowedTreeTools.get().stream().map(s -> getItem(s)).filter(b -> b != null).collect(Collectors.toList());
+    }
+
+    public static boolean getTreeHarvest() {
+        return treeHarvest.get();
     }
 
     public static class ServerConfig {
-        public ForgeConfigSpec.ConfigValue<List<String>> reapWhitelist;
-        public ForgeConfigSpec.ConfigValue<List<String>> logTypes;
-        public ForgeConfigSpec.ConfigValue<List<String>> groundTypes;
-        public ForgeConfigSpec.ConfigValue<List<String>> allowedTreeTools;
-        public ForgeConfigSpec.BooleanValue treeHarvest;
+
 
         public ServerConfig(ForgeConfigSpec.Builder builder) {
             reapWhitelist = builder
-                    .comment("")
-                    .translation("reap_whitelist")
-                    .define("reap_whitelist", Arrays.asList(
+                    .comment("The blocks that should get harvested by right-clicking")
+                    .defineList("reap_whitelist", Arrays.asList(
                             "minecraft:potatoes",
                             "minecraft:carrots",
                             "minecraft:wheat",
                             "minecraft:beetroots",
                             "minecraft:cocoa"
-                    ));
+                    ), Objects::nonNull);
             logTypes = builder
-                    .comment("")
-                    .translation("log_types")
-                    .define("log_types", Arrays.asList(
+                    .comment("The log blocks that are allowed to get harvested by the tree harvester")
+                    .defineList("log_types", Arrays.asList(
                             "minecraft:acacia_log",
                             "minecraft:birch_log",
                             "minecraft:dark_oak_log",
                             "minecraft:jungle_log",
                             "minecraft:oak_log",
                             "minecraft:spruce_log"
-                    ));
+                    ), Objects::nonNull);
             groundTypes = builder
-                    .comment("")
-                    .translation("ground_types")
-                    .define("ground_types", Arrays.asList(
+                    .comment("The blocks that are allowed below logs that can be harvested")
+                    .defineList("ground_types", Arrays.asList(
                             "minecraft:dirt",
                             "minecraft:grass_block"
-                    ));
+                    ), Objects::nonNull);
             allowedTreeTools = builder
-                    .comment("")
-                    .translation("allowed_tree_tools")
-                    .define("allowed_tree_tools", Arrays.asList(
+                    .comment("The tools which the player is allowed to harvest trees")
+                    .defineList("allowed_tree_tools", Arrays.asList(
                             "minecraft:wooden_axe",
                             "minecraft:golden_axe",
                             "minecraft:stone_axe",
                             "minecraft:iron_axe",
                             "minecraft:diamond_axe"
-                    ));
+                    ), Objects::nonNull);
             treeHarvest = builder
-                    .comment("")
-                    .translation("tree_harvest")
+                    .comment("If the tree harvester should be enabled")
                     .define("tree_harvest", true);
         }
     }
 
     @Nullable
-    public static Block getBlock(String name) {
+    private static Block getBlock(String name) {
         try {
             String[] split = name.split(":");
             if (split.length == 2) {
@@ -105,7 +108,7 @@ public class Config {
     }
 
     @Nullable
-    public static Item getItem(String name) {
+    private static Item getItem(String name) {
         try {
             String[] split = name.split(":");
             if (split.length == 2) {

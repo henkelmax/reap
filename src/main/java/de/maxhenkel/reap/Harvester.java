@@ -21,7 +21,7 @@ public class Harvester {
 
         Block blockClicked = state.getBlock();
 
-        if (Config.reapWhitelist.stream().noneMatch(b -> b.equals(state.getBlock()))) {
+        if (Config.getReapWhitelist().stream().noneMatch(b -> b.equals(state.getBlock()))) {
             return false;
         }
 

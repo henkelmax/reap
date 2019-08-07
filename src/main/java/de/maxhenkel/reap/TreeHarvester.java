@@ -28,7 +28,7 @@ public class TreeHarvester {
 
     public void harvest() {
 
-        if (!Config.treeHarvest) {
+        if (!Config.getTreeHarvest()) {
             return;
         }
 
@@ -46,7 +46,7 @@ public class TreeHarvester {
             return;
         }
 
-        if (Config.allowedTreeTools.stream().noneMatch(i -> i.equals(heldItem.getItem()))) {
+        if (Config.getAllowedTreeTools().stream().noneMatch(i -> i.equals(heldItem.getItem()))) {
             return;
         }
 
@@ -106,12 +106,12 @@ public class TreeHarvester {
 
     private boolean isLog(BlockPos pos) {
         BlockState b = world.getBlockState(pos);
-        return Config.logTypes.stream().anyMatch(l -> l.equals(b.getBlock()));
+        return Config.getLogTypes().stream().anyMatch(l -> l.equals(b.getBlock()));
     }
 
     private boolean isGround(BlockPos pos) {
         BlockState b = world.getBlockState(pos);
-        return Config.groundTypes.stream().anyMatch(l -> l.equals(b.getBlock()));
+        return Config.getGroundTypes().stream().anyMatch(l -> l.equals(b.getBlock()));
     }
 
     private void destroy(BlockPos pos) {
