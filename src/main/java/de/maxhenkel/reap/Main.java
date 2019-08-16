@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 public class Main{
 	
     public static final String MODID = "reap";
-    public static final String VERSION = "1.5.2";
+    public static final String VERSION = "1.5.3";
     public static final String MC_VERSION = "[1.12.2]";
 	public static final String UPDATE_JSON = "http://maxhenkel.de/update/reap.json";
 
