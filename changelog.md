@@ -1,1 +1,1 @@
-- Fix config issue
+- Added missing ground types to config

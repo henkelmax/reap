@@ -75,7 +75,10 @@ public class Config {
                     .comment("The blocks that are allowed below logs that can be harvested")
                     .defineList("ground_types", Arrays.asList(
                             "minecraft:dirt",
-                            "minecraft:grass_block"
+                            "minecraft:grass_block",
+                            "minecraft:coarse_dirt",
+                            "minecraft:podzol",
+                            "minecraft:mycelium"
                     ), Objects::nonNull);
             allowedTreeTools = builder
                     .comment("The tools which the player is allowed to harvest trees")
