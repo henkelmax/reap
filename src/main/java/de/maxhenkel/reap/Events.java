@@ -18,7 +18,7 @@ public class Events {
             return;
         }
 
-        PlayerEntity player = event.getEntityPlayer();
+        PlayerEntity player = event.getPlayer();
 
         if (player == null) {
             return;

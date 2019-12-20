@@ -42,7 +42,7 @@ public class TreeHarvester {
             return;
         }
 
-        if (player.isSneaking()) {
+        if (player.isCrouching()) {
             return;
         }
 

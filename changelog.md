@@ -1,1 +1,1 @@
-- Added missing ground types to config
+- Updated to 1.15.1
