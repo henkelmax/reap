@@ -42,7 +42,7 @@ public class TreeHarvester {
             return;
         }
 
-        if (player.isCrouching()) {
+        if (player.func_225608_bj_()) {
             return;
         }
 
