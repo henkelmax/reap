@@ -1,1 +1,1 @@
-- Fixed tree harvesting crouch issue
+- Updated to 1.15.2
