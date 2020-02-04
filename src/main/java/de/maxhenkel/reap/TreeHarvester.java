@@ -42,7 +42,7 @@ public class TreeHarvester {
             return;
         }
 
-        if (player.func_225608_bj_()) {
+        if (player.isShiftKeyDown()) {
             return;
         }
 
