@@ -5,12 +5,14 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.LootParameters;
 
 import java.util.List;
+import java.util.Random;
 
 public class Harvester {
 
@@ -25,11 +27,11 @@ public class Harvester {
             return false;
         }
 
-        if (!(blockClicked instanceof IGrowable)) {
+        IGrowable growble = getGrowable(blockClicked);
+
+        if (growble == null) {
             return false;
         }
-
-        IGrowable growble = (IGrowable) blockClicked;
 
         if (growble.canGrow(world, pos, state, world.isRemote)) {
             return false;
@@ -60,6 +62,32 @@ public class Harvester {
         }
 
         return true;
+    }
+
+    private static IGrowable getGrowable(Block block) {
+        if (block instanceof IGrowable) {
+            return (IGrowable) block;
+        }
+
+        if (block instanceof NetherWartBlock) {
+            return new IGrowable() {
+                @Override
+                public boolean canGrow(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
+                    return state.get(NetherWartBlock.AGE) < 3;
+                }
+
+                @Override
+                public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, BlockState state) {
+                    return false;
+                }
+
+                @Override
+                public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
+                }
+            };
+        }
+
+        return null;
     }
 
 }

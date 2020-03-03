@@ -8,7 +8,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Config {
@@ -29,19 +31,19 @@ public class Config {
     }
 
     public static List<Block> getReapWhitelist() {
-        return reapWhitelist.get().stream().map(s -> getBlock(s)).filter(b -> b != null).collect(Collectors.toList());
+        return reapWhitelist.get().stream().map(Config::getBlock).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     public static List<Block> getLogTypes() {
-        return logTypes.get().stream().map(s -> getBlock(s)).filter(b -> b != null).collect(Collectors.toList());
+        return logTypes.get().stream().map(Config::getBlock).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     public static List<Block> getGroundTypes() {
-        return groundTypes.get().stream().map(s -> getBlock(s)).filter(b -> b != null).collect(Collectors.toList());
+        return groundTypes.get().stream().map(Config::getBlock).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     public static List<Item> getAllowedTreeTools() {
-        return allowedTreeTools.get().stream().map(s -> getItem(s)).filter(b -> b != null).collect(Collectors.toList());
+        return allowedTreeTools.get().stream().map(Config::getItem).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     public static boolean getTreeHarvest() {
@@ -50,11 +52,11 @@ public class Config {
 
     public static class ServerConfig {
 
-
         public ServerConfig(ForgeConfigSpec.Builder builder) {
             reapWhitelist = builder
                     .comment("The blocks that should get harvested by right-clicking")
                     .defineList("reap_whitelist", Arrays.asList(
+                            "minecraft:nether_wart",
                             "minecraft:potatoes",
                             "minecraft:carrots",
                             "minecraft:wheat",
@@ -100,8 +102,9 @@ public class Config {
         try {
             String[] split = name.split(":");
             if (split.length == 2) {
-                Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(split[0], split[1]));
-                return b;
+                return ForgeRegistries.BLOCKS.getValue(new ResourceLocation(split[0], split[1]));
+            } else if (split.length == 1) {
+                return ForgeRegistries.BLOCKS.getValue(new ResourceLocation("minecraft", split[0]));
             } else {
                 return null;
             }
@@ -115,8 +118,9 @@ public class Config {
         try {
             String[] split = name.split(":");
             if (split.length == 2) {
-                Item i = ForgeRegistries.ITEMS.getValue(new ResourceLocation(split[0], split[1]));
-                return i;
+                return ForgeRegistries.ITEMS.getValue(new ResourceLocation(split[0], split[1]));
+            } else if (split.length == 1) {
+                return ForgeRegistries.ITEMS.getValue(new ResourceLocation("minecraft", split[0]));
             } else {
                 return null;
             }

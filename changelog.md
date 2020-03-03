@@ -1,1 +1,2 @@
-- Updated forge and mcp mappings
+- Fixed hand not swinging when harvesting crops
+- Added Nether Warts to harvestable blocks
