@@ -42,7 +42,7 @@ public class TreeHarvester {
             return;
         }
 
-        if (player.isShiftKeyDown()) {
+        if (player.isSneaking()) {
             return;
         }
 
