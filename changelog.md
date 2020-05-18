@@ -1,2 +1,3 @@
 - Updated forge version
 - Updated MCP mappings
+- Optimize config loading

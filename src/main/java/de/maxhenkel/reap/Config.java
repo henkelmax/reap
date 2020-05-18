@@ -7,7 +7,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -31,19 +30,19 @@ public class Config {
     }
 
     public static List<Block> getReapWhitelist() {
-        return reapWhitelist.get().stream().map(Config::getBlock).filter(Objects::nonNull).collect(Collectors.toList());
+        return reapWhitelist.get().stream().map(ResourceLocation::new).map(ForgeRegistries.BLOCKS::getValue).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     public static List<Block> getLogTypes() {
-        return logTypes.get().stream().map(Config::getBlock).filter(Objects::nonNull).collect(Collectors.toList());
+        return logTypes.get().stream().map(ResourceLocation::new).map(ForgeRegistries.BLOCKS::getValue).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     public static List<Block> getGroundTypes() {
-        return groundTypes.get().stream().map(Config::getBlock).filter(Objects::nonNull).collect(Collectors.toList());
+        return groundTypes.get().stream().map(ResourceLocation::new).map(ForgeRegistries.BLOCKS::getValue).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     public static List<Item> getAllowedTreeTools() {
-        return allowedTreeTools.get().stream().map(Config::getItem).filter(Objects::nonNull).collect(Collectors.toList());
+        return groundTypes.get().stream().map(ResourceLocation::new).map(ForgeRegistries.ITEMS::getValue).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     public static boolean getTreeHarvest() {
@@ -94,38 +93,6 @@ public class Config {
             treeHarvest = builder
                     .comment("If the tree harvester should be enabled")
                     .define("tree_harvest", true);
-        }
-    }
-
-    @Nullable
-    private static Block getBlock(String name) {
-        try {
-            String[] split = name.split(":");
-            if (split.length == 2) {
-                return ForgeRegistries.BLOCKS.getValue(new ResourceLocation(split[0], split[1]));
-            } else if (split.length == 1) {
-                return ForgeRegistries.BLOCKS.getValue(new ResourceLocation("minecraft", split[0]));
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    @Nullable
-    private static Item getItem(String name) {
-        try {
-            String[] split = name.split(":");
-            if (split.length == 2) {
-                return ForgeRegistries.ITEMS.getValue(new ResourceLocation(split[0], split[1]));
-            } else if (split.length == 1) {
-                return ForgeRegistries.ITEMS.getValue(new ResourceLocation("minecraft", split[0]));
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            return null;
         }
     }
 }
