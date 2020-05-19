@@ -22,4 +22,4 @@ The tools to break trees and the log types are also configurable.
 
 ![](https://media.giphy.com/media/cIDGbEPSDr2lbZrWtc/giphy.gif)
 
-![](https://media.giphy.com/media/hugjYQhd5gPln74VcO/giphy.gif)
+![](https://media.giphy.com/media/J4hQzIjPWjRu5bvByZ/giphy.gif)
