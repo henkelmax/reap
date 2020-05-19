@@ -42,7 +42,7 @@ public class Config {
     }
 
     public static List<Item> getAllowedTreeTools() {
-        return groundTypes.get().stream().map(ResourceLocation::new).map(ForgeRegistries.ITEMS::getValue).filter(Objects::nonNull).collect(Collectors.toList());
+        return allowedTreeTools.get().stream().map(ResourceLocation::new).map(ForgeRegistries.ITEMS::getValue).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     public static boolean getTreeHarvest() {

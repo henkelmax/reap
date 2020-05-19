@@ -1,46 +1,25 @@
 package de.maxhenkel.reap;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LogBlock;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 public class TreeHarvester {
 
-    private BlockPos pos;
-    private PlayerEntity player;
-    private IWorld world;
-    private ItemStack heldItem;
-
-    public TreeHarvester(BlockPos pos, PlayerEntity player, IWorld world) {
-        this.pos = pos;
-        this.player = player;
-        this.world = world;
-        this.heldItem = player.getHeldItemMainhand();
-    }
-
-    public void harvest() {
-
+    public static void harvest(BlockPos pos, PlayerEntity player, World world) {
         if (!Config.getTreeHarvest()) {
             return;
         }
 
-        if (heldItem == null) {
-            return;
-        }
-
-        Item item = heldItem.getItem();
-
-        if (item == null) {
-            return;
-        }
+        ItemStack heldItem = player.getHeldItemMainhand();
 
         if (player.isSneaking()) {
             return;
@@ -50,11 +29,11 @@ public class TreeHarvester {
             return;
         }
 
-        if (!isLog(pos)) {
+        if (!isLog(world, pos)) {
             return;
         }
 
-        if (!isGround(pos.down())) {
+        if (!isGround(world, pos.down())) {
             return;
         }
 
@@ -62,88 +41,61 @@ public class TreeHarvester {
             return;
         }
 
-        destroyTree();
-
+        destroyTree(world, player, pos, heldItem);
     }
 
-    private void destroyTree() {
-        destroyConnectedLogs(pos, new Counter(128));
+    private static void destroyTree(World world, PlayerEntity player, BlockPos pos, ItemStack heldItem) {
+        destroyConnectedLogs(world, player, pos, heldItem, new AtomicInteger(128));
     }
 
-    private void destroyConnectedLogs(BlockPos pos, Counter counter) {
-        if (counter.isZero()) {
+    private static void destroyConnectedLogs(World world, PlayerEntity player, BlockPos pos, ItemStack heldItem, AtomicInteger counter) {
+        if (counter.get() <= 0) {
             return;
         }
 
-        ArrayList<BlockPos> positions = new ArrayList<BlockPos>();
+        List<BlockPos> positions = new ArrayList<>();
 
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
                 for (int z = -1; z <= 1; z++) {
-                    check(positions, pos, x, y, z);
+                    check(world, positions, pos, x, y, z);
                 }
             }
         }
 
         for (BlockPos p : positions) {
-            if (counter.isZero()) {
+            if (counter.get() <= 0) {
                 return;
             }
 
-            destroy(p);
-            counter.decrement();
+            destroy(world, player, p, heldItem);
+            counter.getAndDecrement();
 
-            destroyConnectedLogs(p, counter);
+            destroyConnectedLogs(world, player, p, heldItem, counter);
         }
-
     }
 
-    private void check(ArrayList<BlockPos> positions, BlockPos pos, int x, int y, int z) {
-        if (isLog(pos.add(x, y, z))) {
+    private static void check(World world, List<BlockPos> positions, BlockPos pos, int x, int y, int z) {
+        if (isLog(world, pos.add(x, y, z))) {
             positions.add(pos.add(x, y, z));
         }
     }
 
-    private boolean isLog(BlockPos pos) {
+    private static boolean isLog(World world, BlockPos pos) {
         BlockState b = world.getBlockState(pos);
         return Config.getLogTypes().stream().anyMatch(l -> l.equals(b.getBlock()));
     }
 
-    private boolean isGround(BlockPos pos) {
+    private static boolean isGround(World world, BlockPos pos) {
         BlockState b = world.getBlockState(pos);
         return Config.getGroundTypes().stream().anyMatch(l -> l.equals(b.getBlock()));
     }
 
-    private void destroy(BlockPos pos) {
+    private static void destroy(World world, PlayerEntity player, BlockPos pos, ItemStack heldItem) {
         if (heldItem != null) {
-            heldItem.getItem().onBlockDestroyed(heldItem, (World) world, world.getBlockState(pos), pos, player);
+            heldItem.getItem().onBlockDestroyed(heldItem, world, world.getBlockState(pos), pos, player);
             world.destroyBlock(pos, true);
         }
-    }
-
-    private class Counter {
-        private int i;
-
-        public Counter(int i) {
-            this.i = i;
-        }
-
-        public boolean isZero() {
-            if (this.i <= 0) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        public Counter decrement() {
-            if (this.i <= 0) {
-                return this;
-            }
-            this.i = this.i - 1;
-            return this;
-        }
-
     }
 
 }

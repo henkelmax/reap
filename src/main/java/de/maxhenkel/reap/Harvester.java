@@ -18,9 +18,7 @@ public class Harvester {
 
     public static boolean harvest(BlockPos pos, PlayerEntity player) {
         World world = player.world;
-
         BlockState state = world.getBlockState(pos);
-
         Block blockClicked = state.getBlock();
 
         if (Config.getReapWhitelist().stream().noneMatch(b -> b.equals(state.getBlock()))) {
@@ -86,7 +84,6 @@ public class Harvester {
                 }
             };
         }
-
         return null;
     }
 
