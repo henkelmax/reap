@@ -21,7 +21,8 @@ public class Main {
 
     @SubscribeEvent
     public void commonSetup(FMLCommonSetupEvent event) {
-        MinecraftForge.EVENT_BUS.register(new Events());
+        MinecraftForge.EVENT_BUS.register(new CropEvents());
+        MinecraftForge.EVENT_BUS.register(new TreeEvents());
     }
 
 }

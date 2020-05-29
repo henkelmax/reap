@@ -17,11 +17,12 @@ public class Config {
     public static final ServerConfig SERVER;
     public static final ForgeConfigSpec SERVER_SPEC;
 
-    private static ForgeConfigSpec.ConfigValue<List<? extends String>> reapWhitelist;
-    private static ForgeConfigSpec.ConfigValue<List<? extends String>> logTypes;
-    private static ForgeConfigSpec.ConfigValue<List<? extends String>> groundTypes;
-    private static ForgeConfigSpec.ConfigValue<List<? extends String>> allowedTreeTools;
-    private static ForgeConfigSpec.BooleanValue treeHarvest;
+    private static ForgeConfigSpec.ConfigValue<List<? extends String>> REAP_WHITE_LIST;
+    private static ForgeConfigSpec.ConfigValue<List<? extends String>> LOG_TYPES;
+    private static ForgeConfigSpec.ConfigValue<List<? extends String>> GROUND_TYPES;
+    private static ForgeConfigSpec.ConfigValue<List<? extends String>> ALLOWED_TREE_TOOLS;
+    public static ForgeConfigSpec.BooleanValue TREE_HARVEST;
+    public static ForgeConfigSpec.BooleanValue DYNAMIC_TREE_BREAKING_SPEED;
 
     static {
         Pair<ServerConfig, ForgeConfigSpec> specPairServer = new ForgeConfigSpec.Builder().configure(ServerConfig::new);
@@ -30,29 +31,25 @@ public class Config {
     }
 
     public static List<Block> getReapWhitelist() {
-        return reapWhitelist.get().stream().map(ResourceLocation::new).map(ForgeRegistries.BLOCKS::getValue).filter(Objects::nonNull).collect(Collectors.toList());
+        return REAP_WHITE_LIST.get().stream().map(ResourceLocation::new).map(ForgeRegistries.BLOCKS::getValue).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     public static List<Block> getLogTypes() {
-        return logTypes.get().stream().map(ResourceLocation::new).map(ForgeRegistries.BLOCKS::getValue).filter(Objects::nonNull).collect(Collectors.toList());
+        return LOG_TYPES.get().stream().map(ResourceLocation::new).map(ForgeRegistries.BLOCKS::getValue).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     public static List<Block> getGroundTypes() {
-        return groundTypes.get().stream().map(ResourceLocation::new).map(ForgeRegistries.BLOCKS::getValue).filter(Objects::nonNull).collect(Collectors.toList());
+        return GROUND_TYPES.get().stream().map(ResourceLocation::new).map(ForgeRegistries.BLOCKS::getValue).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     public static List<Item> getAllowedTreeTools() {
-        return allowedTreeTools.get().stream().map(ResourceLocation::new).map(ForgeRegistries.ITEMS::getValue).filter(Objects::nonNull).collect(Collectors.toList());
-    }
-
-    public static boolean getTreeHarvest() {
-        return treeHarvest.get();
+        return ALLOWED_TREE_TOOLS.get().stream().map(ResourceLocation::new).map(ForgeRegistries.ITEMS::getValue).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     public static class ServerConfig {
 
         public ServerConfig(ForgeConfigSpec.Builder builder) {
-            reapWhitelist = builder
+            REAP_WHITE_LIST = builder
                     .comment("The blocks that should get harvested by right-clicking")
                     .defineList("reap_whitelist", Arrays.asList(
                             "minecraft:nether_wart",
@@ -62,7 +59,7 @@ public class Config {
                             "minecraft:beetroots",
                             "minecraft:cocoa"
                     ), Objects::nonNull);
-            logTypes = builder
+            LOG_TYPES = builder
                     .comment("The log blocks that are allowed to get harvested by the tree harvester")
                     .defineList("log_types", Arrays.asList(
                             "minecraft:acacia_log",
@@ -72,7 +69,7 @@ public class Config {
                             "minecraft:oak_log",
                             "minecraft:spruce_log"
                     ), Objects::nonNull);
-            groundTypes = builder
+            GROUND_TYPES = builder
                     .comment("The blocks that are allowed below logs that can be harvested")
                     .defineList("ground_types", Arrays.asList(
                             "minecraft:dirt",
@@ -81,7 +78,7 @@ public class Config {
                             "minecraft:podzol",
                             "minecraft:mycelium"
                     ), Objects::nonNull);
-            allowedTreeTools = builder
+            ALLOWED_TREE_TOOLS = builder
                     .comment("The tools which the player is allowed to harvest trees")
                     .defineList("allowed_tree_tools", Arrays.asList(
                             "minecraft:wooden_axe",
@@ -90,9 +87,12 @@ public class Config {
                             "minecraft:iron_axe",
                             "minecraft:diamond_axe"
                     ), Objects::nonNull);
-            treeHarvest = builder
+            TREE_HARVEST = builder
                     .comment("If the tree harvester should be enabled")
                     .define("tree_harvest", true);
+            DYNAMIC_TREE_BREAKING_SPEED = builder
+                    .comment("If bigger trees should be harder to break")
+                    .define("dynamic_tree_breaking_speed", true);
         }
     }
 }

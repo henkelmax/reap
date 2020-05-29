@@ -1,1 +1,1 @@
-- Fixed tree tools not working
+- Added dynamic tree breaking speed
