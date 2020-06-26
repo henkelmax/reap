@@ -1,7 +1,7 @@
 package de.maxhenkel.reap;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.LogBlock;
+import net.minecraft.block.RotatedPillarBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
@@ -37,6 +37,9 @@ public class TreeEvents {
         }
         PlayerEntity player = event.getPlayer();
         BlockPos pos = event.getPos();
+        if (pos == null) {
+            return; //TODO fix break speed
+        }
         if (canHarvest(pos, player, player.world, player.getHeldItemMainhand())) {
             List<BlockPos> connectedLogs = getConnectedLogs(player.world, pos);
             event.setNewSpeed(event.getOriginalSpeed() / Math.min(1F + 0.1F * connectedLogs.size(), 5F));
@@ -64,7 +67,7 @@ public class TreeEvents {
             return false;
         }
 
-        if (!world.getBlockState(pos).get(LogBlock.AXIS).equals(Direction.Axis.Y)) {
+        if (!world.getBlockState(pos).get(RotatedPillarBlock.AXIS).equals(Direction.Axis.Y)) {
             return false;
         }
 

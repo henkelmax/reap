@@ -4,13 +4,13 @@ import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameters;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -56,11 +56,11 @@ public class CropEvents {
 
         BlockState newState = blockClicked.getDefaultState();
 
-        if (state.getProperties().stream().anyMatch(p -> p.equals(HorizontalBlock.HORIZONTAL_FACING))) {
+        if (state.func_235904_r_().stream().anyMatch(p -> p.equals(HorizontalBlock.HORIZONTAL_FACING))) {
             newState = newState.with(HorizontalBlock.HORIZONTAL_FACING, state.get(HorizontalBlock.HORIZONTAL_FACING));
         }
 
-        if (state.getProperties().stream().anyMatch(p -> p.equals(CropsBlock.AGE))) {
+        if (state.func_235904_r_().stream().anyMatch(p -> p.equals(CropsBlock.AGE))) {
             newState = state.with(CropsBlock.AGE, 0);
         }
 

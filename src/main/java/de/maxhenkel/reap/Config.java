@@ -67,7 +67,9 @@ public class Config {
                             "minecraft:dark_oak_log",
                             "minecraft:jungle_log",
                             "minecraft:oak_log",
-                            "minecraft:spruce_log"
+                            "minecraft:spruce_log",
+                            "minecraft:crimson_stem",
+                            "minecraft:warped_stem"
                     ), Objects::nonNull);
             GROUND_TYPES = builder
                     .comment("The blocks that are allowed below logs that can be harvested")
@@ -76,7 +78,10 @@ public class Config {
                             "minecraft:grass_block",
                             "minecraft:coarse_dirt",
                             "minecraft:podzol",
-                            "minecraft:mycelium"
+                            "minecraft:mycelium",
+                            "minecraft:warped_nylium",
+                            "minecraft:crimson_nylium",
+                            "minecraft:netherrack"
                     ), Objects::nonNull);
             ALLOWED_TREE_TOOLS = builder
                     .comment("The tools which the player is allowed to harvest trees")
@@ -85,7 +90,8 @@ public class Config {
                             "minecraft:golden_axe",
                             "minecraft:stone_axe",
                             "minecraft:iron_axe",
-                            "minecraft:diamond_axe"
+                            "minecraft:diamond_axe",
+                            "minecraft:netherite_axe"
                     ), Objects::nonNull);
             TREE_HARVEST = builder
                     .comment("If the tree harvester should be enabled")
