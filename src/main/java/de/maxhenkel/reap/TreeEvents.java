@@ -55,7 +55,7 @@ public class TreeEvents {
             return false;
         }
 
-        if (Config.getAllowedTreeTools().stream().noneMatch(i -> i.equals(heldItem.getItem()))) {
+        if (Config.getAllowedTreeTools().stream().noneMatch(tag -> tag.func_230235_a_(heldItem.getItem()))) {
             return false;
         }
 
@@ -67,8 +67,11 @@ public class TreeEvents {
             return false;
         }
 
-        if (!world.getBlockState(pos).get(RotatedPillarBlock.AXIS).equals(Direction.Axis.Y)) {
-            return false;
+        BlockState state = world.getBlockState(pos);
+        if (state.func_235904_r_().stream().anyMatch(p -> p.equals(RotatedPillarBlock.AXIS))) {
+            if (!state.get(RotatedPillarBlock.AXIS).equals(Direction.Axis.Y)) {
+                return false;
+            }
         }
 
         return true;
@@ -117,12 +120,12 @@ public class TreeEvents {
 
     private static boolean isLog(World world, BlockPos pos) {
         BlockState b = world.getBlockState(pos);
-        return Config.getLogTypes().stream().anyMatch(l -> l.equals(b.getBlock()));
+        return Config.getLogTypes().stream().anyMatch(tag -> tag.func_230235_a_(b.getBlock()));
     }
 
     private static boolean isGround(World world, BlockPos pos) {
         BlockState b = world.getBlockState(pos);
-        return Config.getGroundTypes().stream().anyMatch(l -> l.equals(b.getBlock()));
+        return Config.getGroundTypes().stream().anyMatch(tag -> tag.func_230235_a_(b.getBlock()));
     }
 
     private static void destroy(World world, PlayerEntity player, BlockPos pos, ItemStack heldItem) {

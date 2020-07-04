@@ -2,6 +2,9 @@ package de.maxhenkel.reap;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ITag;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -30,20 +33,20 @@ public class Config {
         SERVER = specPairServer.getLeft();
     }
 
-    public static List<Block> getReapWhitelist() {
-        return REAP_WHITE_LIST.get().stream().map(ResourceLocation::new).map(ForgeRegistries.BLOCKS::getValue).filter(Objects::nonNull).collect(Collectors.toList());
+    public static List<ITag<Block>> getReapWhitelist() {
+        return REAP_WHITE_LIST.get().stream().map(Config::getBlockTag).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
-    public static List<Block> getLogTypes() {
-        return LOG_TYPES.get().stream().map(ResourceLocation::new).map(ForgeRegistries.BLOCKS::getValue).filter(Objects::nonNull).collect(Collectors.toList());
+    public static List<ITag<Block>> getLogTypes() {
+        return LOG_TYPES.get().stream().map(Config::getBlockTag).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
-    public static List<Block> getGroundTypes() {
-        return GROUND_TYPES.get().stream().map(ResourceLocation::new).map(ForgeRegistries.BLOCKS::getValue).filter(Objects::nonNull).collect(Collectors.toList());
+    public static List<ITag<Block>> getGroundTypes() {
+        return GROUND_TYPES.get().stream().map(Config::getBlockTag).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
-    public static List<Item> getAllowedTreeTools() {
-        return ALLOWED_TREE_TOOLS.get().stream().map(ResourceLocation::new).map(ForgeRegistries.ITEMS::getValue).filter(Objects::nonNull).collect(Collectors.toList());
+    public static List<ITag<Item>> getAllowedTreeTools() {
+        return ALLOWED_TREE_TOOLS.get().stream().map(Config::getItemTag).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     public static class ServerConfig {
@@ -61,6 +64,7 @@ public class Config {
                     ), Objects::nonNull);
             LOG_TYPES = builder
                     .comment("The log blocks that are allowed to get harvested by the tree harvester")
+                    .comment("Examples: 'minecraft:oak_log', '#minecraft:logs'")
                     .defineList("log_types", Arrays.asList(
                             "minecraft:acacia_log",
                             "minecraft:birch_log",
@@ -73,6 +77,7 @@ public class Config {
                     ), Objects::nonNull);
             GROUND_TYPES = builder
                     .comment("The blocks that are allowed below logs that can be harvested")
+                    .comment("Examples: 'minecraft:dirt', '#forge:sand/colorless'")
                     .defineList("ground_types", Arrays.asList(
                             "minecraft:dirt",
                             "minecraft:grass_block",
@@ -99,6 +104,32 @@ public class Config {
             DYNAMIC_TREE_BREAKING_SPEED = builder
                     .comment("If bigger trees should be harder to break")
                     .define("dynamic_tree_breaking_speed", true);
+        }
+    }
+
+    private static ITag<Block> getBlockTag(String name) {
+        if (name.startsWith("#")) {
+            return BlockTags.getCollection().get(new ResourceLocation(name.substring(1)));
+        } else {
+            Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(name));
+            if (block == null) {
+                return null;
+            } else {
+                return new SingleTag<>(block);
+            }
+        }
+    }
+
+    private static ITag<Item> getItemTag(String name) {
+        if (name.startsWith("#")) {
+            return ItemTags.getCollection().get(new ResourceLocation(name.substring(1)));
+        } else {
+            Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(name));
+            if (item == null) {
+                return null;
+            } else {
+                return new SingleTag<>(item);
+            }
         }
     }
 }
