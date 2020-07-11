@@ -1,1 +1,2 @@
-- Added the ability to use tags in the config
+- Reorganized config
+- Added configurable breaking speed

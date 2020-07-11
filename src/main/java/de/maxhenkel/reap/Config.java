@@ -25,7 +25,9 @@ public class Config {
     private static ForgeConfigSpec.ConfigValue<List<? extends String>> GROUND_TYPES;
     private static ForgeConfigSpec.ConfigValue<List<? extends String>> ALLOWED_TREE_TOOLS;
     public static ForgeConfigSpec.BooleanValue TREE_HARVEST;
-    public static ForgeConfigSpec.BooleanValue DYNAMIC_TREE_BREAKING_SPEED;
+    public static ForgeConfigSpec.BooleanValue DYNAMIC_TREE_BREAKING_ENABLED;
+    public static ForgeConfigSpec.DoubleValue DYNAMIC_TREE_BREAKING_MIN_SPEED;
+    public static ForgeConfigSpec.DoubleValue DYNAMIC_TREE_BREAKING_PER_LOG;
 
     static {
         Pair<ServerConfig, ForgeConfigSpec> specPairServer = new ForgeConfigSpec.Builder().configure(ServerConfig::new);
@@ -54,7 +56,7 @@ public class Config {
         public ServerConfig(ForgeConfigSpec.Builder builder) {
             REAP_WHITE_LIST = builder
                     .comment("The blocks that should get harvested by right-clicking")
-                    .defineList("reap_whitelist", Arrays.asList(
+                    .defineList("crop_harvesting.whitelist", Arrays.asList(
                             "minecraft:nether_wart",
                             "minecraft:potatoes",
                             "minecraft:carrots",
@@ -65,7 +67,7 @@ public class Config {
             LOG_TYPES = builder
                     .comment("The log blocks that are allowed to get harvested by the tree harvester")
                     .comment("Examples: 'minecraft:oak_log', '#minecraft:logs'")
-                    .defineList("log_types", Arrays.asList(
+                    .defineList("tree_harvesting.log_types", Arrays.asList(
                             "minecraft:acacia_log",
                             "minecraft:birch_log",
                             "minecraft:dark_oak_log",
@@ -78,7 +80,7 @@ public class Config {
             GROUND_TYPES = builder
                     .comment("The blocks that are allowed below logs that can be harvested")
                     .comment("Examples: 'minecraft:dirt', '#forge:sand/colorless'")
-                    .defineList("ground_types", Arrays.asList(
+                    .defineList("tree_harvesting.ground_types", Arrays.asList(
                             "minecraft:dirt",
                             "minecraft:grass_block",
                             "minecraft:coarse_dirt",
@@ -90,7 +92,7 @@ public class Config {
                     ), Objects::nonNull);
             ALLOWED_TREE_TOOLS = builder
                     .comment("The tools which the player is allowed to harvest trees")
-                    .defineList("allowed_tree_tools", Arrays.asList(
+                    .defineList("tree_harvesting.allowed_tree_tools", Arrays.asList(
                             "minecraft:wooden_axe",
                             "minecraft:golden_axe",
                             "minecraft:stone_axe",
@@ -100,10 +102,16 @@ public class Config {
                     ), Objects::nonNull);
             TREE_HARVEST = builder
                     .comment("If the tree harvester should be enabled")
-                    .define("tree_harvest", true);
-            DYNAMIC_TREE_BREAKING_SPEED = builder
+                    .define("tree_harvesting.enabled", true);
+            DYNAMIC_TREE_BREAKING_ENABLED = builder
                     .comment("If bigger trees should be harder to break")
-                    .define("dynamic_tree_breaking_speed", true);
+                    .define("tree_harvesting.dynamic_breaking_speed.enabled", true);
+            DYNAMIC_TREE_BREAKING_MIN_SPEED = builder
+                    .comment("The maximum amount of time a tree should take to harvest")
+                    .defineInRange("tree_harvesting.dynamic_breaking_speed.min_speed", 10D, 1D, 100D);
+            DYNAMIC_TREE_BREAKING_PER_LOG = builder
+                    .comment("The amount of breaking time that gets added per harvested log")
+                    .defineInRange("tree_harvesting.dynamic_breaking_speed.per_log", 0.1D, 0D, 100D);
         }
     }
 

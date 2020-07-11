@@ -32,17 +32,17 @@ public class TreeEvents {
 
     @SubscribeEvent
     public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-        if (!Config.TREE_HARVEST.get() || !Config.DYNAMIC_TREE_BREAKING_SPEED.get()) {
+        if (!Config.TREE_HARVEST.get() || !Config.DYNAMIC_TREE_BREAKING_ENABLED.get()) {
             return;
         }
         PlayerEntity player = event.getPlayer();
         BlockPos pos = event.getPos();
         if (pos == null) {
-            return; //TODO fix break speed
+            return;
         }
         if (canHarvest(pos, player, player.world, player.getHeldItemMainhand())) {
             List<BlockPos> connectedLogs = getConnectedLogs(player.world, pos);
-            event.setNewSpeed(event.getOriginalSpeed() / Math.min(1F + 0.1F * connectedLogs.size(), 5F));
+            event.setNewSpeed((float) (event.getOriginalSpeed() / Math.min(1D + Config.DYNAMIC_TREE_BREAKING_PER_LOG.get() * connectedLogs.size(), Config.DYNAMIC_TREE_BREAKING_MIN_SPEED.get())));
         }
     }
 
