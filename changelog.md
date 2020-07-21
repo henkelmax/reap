@@ -1,2 +1,1 @@
-- Reorganized config
-- Added configurable breaking speed
+- Internal changes

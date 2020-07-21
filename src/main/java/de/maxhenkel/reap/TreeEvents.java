@@ -19,7 +19,7 @@ public class TreeEvents {
     @SubscribeEvent
     public void onBlockBreak(BlockEvent.BreakEvent event) {
         World world = (World) event.getWorld();
-        if (!Config.TREE_HARVEST.get() || world.isRemote()) {
+        if (!Main.SERVER_CONFIG.treeHarvest.get() || world.isRemote()) {
             return;
         }
         PlayerEntity player = event.getPlayer();
@@ -32,7 +32,7 @@ public class TreeEvents {
 
     @SubscribeEvent
     public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-        if (!Config.TREE_HARVEST.get() || !Config.DYNAMIC_TREE_BREAKING_ENABLED.get()) {
+        if (!Main.SERVER_CONFIG.treeHarvest.get() || !Main.SERVER_CONFIG.dynamicTreeBreakingEnabled.get()) {
             return;
         }
         PlayerEntity player = event.getPlayer();
@@ -42,7 +42,7 @@ public class TreeEvents {
         }
         if (canHarvest(pos, player, player.world, player.getHeldItemMainhand())) {
             List<BlockPos> connectedLogs = getConnectedLogs(player.world, pos);
-            event.setNewSpeed((float) (event.getOriginalSpeed() / Math.min(1D + Config.DYNAMIC_TREE_BREAKING_PER_LOG.get() * connectedLogs.size(), Config.DYNAMIC_TREE_BREAKING_MIN_SPEED.get())));
+            event.setNewSpeed((float) (event.getOriginalSpeed() / Math.min(1D + Main.SERVER_CONFIG.dynamicTreeBreakingPerLog.get() * connectedLogs.size(), Main.SERVER_CONFIG.dynamicTreeBreakingMinSpeed.get())));
         }
     }
 
@@ -55,7 +55,7 @@ public class TreeEvents {
             return false;
         }
 
-        if (Config.getAllowedTreeTools().stream().noneMatch(tag -> tag.func_230235_a_(heldItem.getItem()))) {
+        if (Main.SERVER_CONFIG.allowedTreeTools.stream().noneMatch(tag -> tag.func_230235_a_(heldItem.getItem()))) {
             return false;
         }
 
@@ -120,12 +120,12 @@ public class TreeEvents {
 
     private static boolean isLog(World world, BlockPos pos) {
         BlockState b = world.getBlockState(pos);
-        return Config.getLogTypes().stream().anyMatch(tag -> tag.func_230235_a_(b.getBlock()));
+        return Main.SERVER_CONFIG.logTypes.stream().anyMatch(tag -> tag.func_230235_a_(b.getBlock()));
     }
 
     private static boolean isGround(World world, BlockPos pos) {
         BlockState b = world.getBlockState(pos);
-        return Config.getGroundTypes().stream().anyMatch(tag -> tag.func_230235_a_(b.getBlock()));
+        return Main.SERVER_CONFIG.groundTypes.stream().anyMatch(tag -> tag.func_230235_a_(b.getBlock()));
     }
 
     private static void destroy(World world, PlayerEntity player, BlockPos pos, ItemStack heldItem) {

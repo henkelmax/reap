@@ -1,0 +1,133 @@
+package de.maxhenkel.reap;
+
+import de.maxhenkel.corelib.config.ConfigBase;
+import de.maxhenkel.corelib.tag.SingleElementTag;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ITag;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+public class ServerConfig extends ConfigBase {
+
+    private final ForgeConfigSpec.ConfigValue<List<? extends String>> reapWhitelistSpec;
+    private final ForgeConfigSpec.ConfigValue<List<? extends String>> logTypesSpec;
+    private final ForgeConfigSpec.ConfigValue<List<? extends String>> groundTypesSpec;
+    private final ForgeConfigSpec.ConfigValue<List<? extends String>> allowedTreeToolsSpec;
+    public final ForgeConfigSpec.BooleanValue treeHarvest;
+    public final ForgeConfigSpec.BooleanValue dynamicTreeBreakingEnabled;
+    public final ForgeConfigSpec.DoubleValue dynamicTreeBreakingMinSpeed;
+    public final ForgeConfigSpec.DoubleValue dynamicTreeBreakingPerLog;
+
+    public List<ITag<Block>> reapWhitelist;
+    public List<ITag<Block>> logTypes;
+    public List<ITag<Block>> groundTypes;
+    public List<ITag<Item>> allowedTreeTools;
+
+    public ServerConfig(ForgeConfigSpec.Builder builder) {
+        super(builder);
+        reapWhitelistSpec = builder
+                .comment("The blocks that should get harvested by right-clicking")
+                .defineList("crop_harvesting.whitelist", Arrays.asList(
+                        "minecraft:nether_wart",
+                        "minecraft:potatoes",
+                        "minecraft:carrots",
+                        "minecraft:wheat",
+                        "minecraft:beetroots",
+                        "minecraft:cocoa"
+                ), Objects::nonNull);
+        logTypesSpec = builder
+                .comment("The log blocks that are allowed to get harvested by the tree harvester")
+                .comment("Examples: 'minecraft:oak_log', '#minecraft:logs'")
+                .defineList("tree_harvesting.log_types", Arrays.asList(
+                        "minecraft:acacia_log",
+                        "minecraft:birch_log",
+                        "minecraft:dark_oak_log",
+                        "minecraft:jungle_log",
+                        "minecraft:oak_log",
+                        "minecraft:spruce_log",
+                        "minecraft:crimson_stem",
+                        "minecraft:warped_stem"
+                ), Objects::nonNull);
+        groundTypesSpec = builder
+                .comment("The blocks that are allowed below logs that can be harvested")
+                .comment("Examples: 'minecraft:dirt', '#forge:sand/colorless'")
+                .defineList("tree_harvesting.ground_types", Arrays.asList(
+                        "minecraft:dirt",
+                        "minecraft:grass_block",
+                        "minecraft:coarse_dirt",
+                        "minecraft:podzol",
+                        "minecraft:mycelium",
+                        "minecraft:warped_nylium",
+                        "minecraft:crimson_nylium",
+                        "minecraft:netherrack"
+                ), Objects::nonNull);
+        allowedTreeToolsSpec = builder
+                .comment("The tools which the player is allowed to harvest trees")
+                .defineList("tree_harvesting.allowed_tree_tools", Arrays.asList(
+                        "minecraft:wooden_axe",
+                        "minecraft:golden_axe",
+                        "minecraft:stone_axe",
+                        "minecraft:iron_axe",
+                        "minecraft:diamond_axe",
+                        "minecraft:netherite_axe"
+                ), Objects::nonNull);
+        treeHarvest = builder
+                .comment("If the tree harvester should be enabled")
+                .define("tree_harvesting.enabled", true);
+        dynamicTreeBreakingEnabled = builder
+                .comment("If bigger trees should be harder to break")
+                .define("tree_harvesting.dynamic_breaking_speed.enabled", true);
+        dynamicTreeBreakingMinSpeed = builder
+                .comment("The maximum amount of time a tree should take to harvest")
+                .defineInRange("tree_harvesting.dynamic_breaking_speed.min_speed", 10D, 1D, 100D);
+        dynamicTreeBreakingPerLog = builder
+                .comment("The amount of breaking time that gets added per harvested log")
+                .defineInRange("tree_harvesting.dynamic_breaking_speed.per_log", 0.1D, 0D, 100D);
+    }
+
+    @Override
+    public void onReload(ModConfig.ModConfigEvent event) {
+        super.onReload(event);
+        reapWhitelist = reapWhitelistSpec.get().stream().map(this::getBlockTag).filter(Objects::nonNull).collect(Collectors.toList());
+        logTypes = logTypesSpec.get().stream().map(this::getBlockTag).filter(Objects::nonNull).collect(Collectors.toList());
+        groundTypes = groundTypesSpec.get().stream().map(this::getBlockTag).filter(Objects::nonNull).collect(Collectors.toList());
+        allowedTreeTools = allowedTreeToolsSpec.get().stream().map(this::getItemTag).filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
+    private ITag<Block> getBlockTag(String name) {
+        if (name.startsWith("#")) {
+            return BlockTags.getCollection().get(new ResourceLocation(name.substring(1)));
+        } else {
+            Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(name));
+            if (block == null) {
+                return null;
+            } else {
+                return new SingleElementTag<>(block);
+            }
+        }
+    }
+
+    private ITag<Item> getItemTag(String name) {
+        if (name.startsWith("#")) {
+            return ItemTags.getCollection().get(new ResourceLocation(name.substring(1)));
+        } else {
+            Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(name));
+            if (item == null) {
+                return null;
+            } else {
+                return new SingleElementTag<>(item);
+            }
+        }
+    }
+
+}

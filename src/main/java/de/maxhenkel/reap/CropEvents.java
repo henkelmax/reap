@@ -32,7 +32,7 @@ public class CropEvents {
         BlockState state = world.getBlockState(pos);
         Block blockClicked = state.getBlock();
 
-        if (Config.getReapWhitelist().stream().noneMatch(tag -> tag.func_230235_a_(state.getBlock()))) {
+        if (Main.SERVER_CONFIG.reapWhitelist.stream().noneMatch(tag -> tag.func_230235_a_(state.getBlock()))) {
             return false;
         }
 
