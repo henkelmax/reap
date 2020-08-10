@@ -20,7 +20,7 @@ In the config file you can define which crops can be harvested or not.
 The tools to break trees and the log types are also configurable.
 
 ### Crop Harvesting
-![Crop Harvesting](https://media1.giphy.com/media/PjHV892XRKO7oBcZrD/giphy.gif)
+![Crop Harvesting](https://media1.giphy.com/media/Vi5xSPUMerUk9UaxeD/giphy.gif)
 
-### Log breaking
-![Breaking logs](https://media1.giphy.com/media/XgXXSl45Zp9YyBq8x5/giphy.gif)
+### Log Breaking
+![Log Breaking](https://media1.giphy.com/media/XgXXSl45Zp9YyBq8x5/giphy.gif)
