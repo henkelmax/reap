@@ -19,8 +19,6 @@ It also works with other mods that are adding other crops or trees to Minecraft.
 In the config file you can define which crops can be harvested or not.
 The tools to break trees and the log types are also configurable.
 
-### Crop Harvesting
-![Crop Harvesting](https://media1.giphy.com/media/Vi5xSPUMerUk9UaxeD/giphy.gif)
+![](https://media1.giphy.com/media/Vi5xSPUMerUk9UaxeD/giphy.gif)
 
-### Log Breaking
-![Log Breaking](https://media1.giphy.com/media/XgXXSl45Zp9YyBq8x5/giphy.gif)
+![](https://media1.giphy.com/media/XgXXSl45Zp9YyBq8x5/giphy.gif)
