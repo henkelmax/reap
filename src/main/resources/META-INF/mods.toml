@@ -1,15 +1,16 @@
 modLoader="javafml"
 loaderVersion="${mod_forge_version}"
+license="All rights reserved"
 issueTrackerURL="https://www.curseforge.com/minecraft/mc-mods/reap-mod/issues"
-displayURL="https://www.curseforge.com/minecraft/mc-mods/reap-mod"
-# logoFile="reap.png"
-# credits=""
 [[mods]]
 modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
-authors="${mod_vendor}"
 updateJSONURL="http://maxhenkel.de/update/reap.json"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/reap-mod"
+# logoFile="reap.png"
+# credits=""
+authors="${mod_vendor}"
 description='''Harvest crops by right-clicking'''
 [[dependencies.${mod_id}]]
     modId="forge"

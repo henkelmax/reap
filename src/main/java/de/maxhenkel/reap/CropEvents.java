@@ -8,6 +8,7 @@ import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameters;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -50,7 +51,7 @@ public class CropEvents {
             return true;
         }
 
-        LootContext.Builder context = new LootContext.Builder((ServerWorld) world).withParameter(LootParameters.POSITION, pos).withParameter(LootParameters.BLOCK_STATE, state).withParameter(LootParameters.THIS_ENTITY, player).withParameter(LootParameters.TOOL, ItemStack.EMPTY);
+        LootContext.Builder context = new LootContext.Builder((ServerWorld) world).withParameter(LootParameters.field_237457_g_, new Vector3d(pos.getX(), pos.getY(), pos.getZ())).withParameter(LootParameters.BLOCK_STATE, state).withParameter(LootParameters.THIS_ENTITY, player).withParameter(LootParameters.TOOL, ItemStack.EMPTY);
 
         List<ItemStack> drops = state.getDrops(context);
 
