@@ -23,6 +23,7 @@ public class ServerConfig extends ConfigBase {
     private final ForgeConfigSpec.ConfigValue<List<? extends String>> logTypesSpec;
     private final ForgeConfigSpec.ConfigValue<List<? extends String>> groundTypesSpec;
     private final ForgeConfigSpec.ConfigValue<List<? extends String>> allowedTreeToolsSpec;
+    public final ForgeConfigSpec.BooleanValue considerTool;
     public final ForgeConfigSpec.BooleanValue treeHarvest;
     public final ForgeConfigSpec.BooleanValue dynamicTreeBreakingEnabled;
     public final ForgeConfigSpec.DoubleValue dynamicTreeBreakingMinSpeed;
@@ -81,6 +82,9 @@ public class ServerConfig extends ConfigBase {
                         "minecraft:diamond_axe",
                         "minecraft:netherite_axe"
                 ), Objects::nonNull);
+        considerTool = builder
+                .comment("If the held tool should be considered when right-click harvesting")
+                .define("crop_harvesting.consider_tool", true);
         treeHarvest = builder
                 .comment("If the tree harvester should be enabled")
                 .define("tree_harvesting.enabled", true);

@@ -51,7 +51,13 @@ public class CropEvents {
             return true;
         }
 
-        LootContext.Builder context = new LootContext.Builder((ServerWorld) world).withParameter(LootParameters.field_237457_g_, new Vector3d(pos.getX(), pos.getY(), pos.getZ())).withParameter(LootParameters.BLOCK_STATE, state).withParameter(LootParameters.THIS_ENTITY, player).withParameter(LootParameters.TOOL, ItemStack.EMPTY);
+        LootContext.Builder context = new LootContext.Builder((ServerWorld) world).withParameter(LootParameters.field_237457_g_, new Vector3d(pos.getX(), pos.getY(), pos.getZ())).withParameter(LootParameters.BLOCK_STATE, state).withParameter(LootParameters.THIS_ENTITY, player);
+
+        if (Main.SERVER_CONFIG.considerTool.get()) {
+            context.withParameter(LootParameters.TOOL, player.getHeldItemMainhand());
+        } else {
+            context.withParameter(LootParameters.TOOL, ItemStack.EMPTY);
+        }
 
         List<ItemStack> drops = state.getDrops(context);
 
