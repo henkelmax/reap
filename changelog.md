@@ -1,1 +1,1 @@
-- Added consider tool config option
+- Updated mods.toml
