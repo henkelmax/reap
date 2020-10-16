@@ -1,16 +1,12 @@
 package de.maxhenkel.reap;
 
 import de.maxhenkel.corelib.config.ConfigBase;
-import de.maxhenkel.corelib.tag.SingleElementTag;
+import de.maxhenkel.corelib.tag.TagUtils;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Arrays;
 import java.util.List;
@@ -102,36 +98,10 @@ public class ServerConfig extends ConfigBase {
     @Override
     public void onReload(ModConfig.ModConfigEvent event) {
         super.onReload(event);
-        reapWhitelist = reapWhitelistSpec.get().stream().map(this::getBlockTag).filter(Objects::nonNull).collect(Collectors.toList());
-        logTypes = logTypesSpec.get().stream().map(this::getBlockTag).filter(Objects::nonNull).collect(Collectors.toList());
-        groundTypes = groundTypesSpec.get().stream().map(this::getBlockTag).filter(Objects::nonNull).collect(Collectors.toList());
-        allowedTreeTools = allowedTreeToolsSpec.get().stream().map(this::getItemTag).filter(Objects::nonNull).collect(Collectors.toList());
-    }
-
-    private ITag<Block> getBlockTag(String name) {
-        if (name.startsWith("#")) {
-            return BlockTags.getCollection().get(new ResourceLocation(name.substring(1)));
-        } else {
-            Block block = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(name));
-            if (block == null) {
-                return null;
-            } else {
-                return new SingleElementTag<>(block);
-            }
-        }
-    }
-
-    private ITag<Item> getItemTag(String name) {
-        if (name.startsWith("#")) {
-            return ItemTags.getCollection().get(new ResourceLocation(name.substring(1)));
-        } else {
-            Item item = ForgeRegistries.ITEMS.getValue(new ResourceLocation(name));
-            if (item == null) {
-                return null;
-            } else {
-                return new SingleElementTag<>(item);
-            }
-        }
+        reapWhitelist = reapWhitelistSpec.get().stream().map(TagUtils::getBlock).filter(Objects::nonNull).collect(Collectors.toList());
+        logTypes = logTypesSpec.get().stream().map(TagUtils::getBlock).filter(Objects::nonNull).collect(Collectors.toList());
+        groundTypes = groundTypesSpec.get().stream().map(TagUtils::getBlock).filter(Objects::nonNull).collect(Collectors.toList());
+        allowedTreeTools = allowedTreeToolsSpec.get().stream().map(TagUtils::getItem).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
 }
