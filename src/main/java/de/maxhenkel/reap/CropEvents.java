@@ -33,7 +33,7 @@ public class CropEvents {
         BlockState state = world.getBlockState(pos);
         Block blockClicked = state.getBlock();
 
-        if (Main.SERVER_CONFIG.reapWhitelist.stream().noneMatch(tag -> tag.func_230235_a_(state.getBlock()))) {
+        if (Main.SERVER_CONFIG.reapWhitelist.stream().noneMatch(tag -> tag.contains(state.getBlock()))) {
             return false;
         }
 
@@ -63,11 +63,11 @@ public class CropEvents {
 
         BlockState newState = blockClicked.getDefaultState();
 
-        if (state.func_235904_r_().stream().anyMatch(p -> p.equals(HorizontalBlock.HORIZONTAL_FACING))) {
+        if (state.getProperties().stream().anyMatch(p -> p.equals(HorizontalBlock.HORIZONTAL_FACING))) {
             newState = newState.with(HorizontalBlock.HORIZONTAL_FACING, state.get(HorizontalBlock.HORIZONTAL_FACING));
         }
 
-        if (state.func_235904_r_().stream().anyMatch(p -> p.equals(CropsBlock.AGE))) {
+        if (state.getProperties().stream().anyMatch(p -> p.equals(CropsBlock.AGE))) {
             newState = state.with(CropsBlock.AGE, 0);
         }
 
