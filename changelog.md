@@ -1,1 +1,1 @@
-- Fixed crash when opening crafting table
+- Updated dependencies
