@@ -98,10 +98,10 @@ public class ServerConfig extends ConfigBase {
     @Override
     public void onReload(ModConfig.ModConfigEvent event) {
         super.onReload(event);
-        reapWhitelist = reapWhitelistSpec.get().stream().map(TagUtils::getBlock).filter(Objects::nonNull).collect(Collectors.toList());
-        logTypes = logTypesSpec.get().stream().map(TagUtils::getBlock).filter(Objects::nonNull).collect(Collectors.toList());
-        groundTypes = groundTypesSpec.get().stream().map(TagUtils::getBlock).filter(Objects::nonNull).collect(Collectors.toList());
-        allowedTreeTools = allowedTreeToolsSpec.get().stream().map(TagUtils::getItem).filter(Objects::nonNull).collect(Collectors.toList());
+        reapWhitelist = reapWhitelistSpec.get().stream().map(s -> TagUtils.getBlock(s, true)).filter(Objects::nonNull).collect(Collectors.toList());
+        logTypes = logTypesSpec.get().stream().map(s -> TagUtils.getBlock(s, true)).filter(Objects::nonNull).collect(Collectors.toList());
+        groundTypes = groundTypesSpec.get().stream().map(s -> TagUtils.getBlock(s, true)).filter(Objects::nonNull).collect(Collectors.toList());
+        allowedTreeTools = allowedTreeToolsSpec.get().stream().map(s -> TagUtils.getItem(s, true)).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
 }

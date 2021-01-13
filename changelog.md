@@ -1,1 +1,1 @@
-- Updated dependencies
+- Fixed missing blocks not working in config
