@@ -19,12 +19,12 @@ public class TreeEvents {
     @SubscribeEvent
     public void onBlockBreak(BlockEvent.BreakEvent event) {
         World world = (World) event.getWorld();
-        if (!Main.SERVER_CONFIG.treeHarvest.get() || world.isRemote()) {
+        if (!Main.SERVER_CONFIG.treeHarvest.get() || world.isClientSide()) {
             return;
         }
         PlayerEntity player = event.getPlayer();
         BlockPos pos = event.getPos();
-        ItemStack heldItem = player.getHeldItemMainhand();
+        ItemStack heldItem = player.getMainHandItem();
         if (canHarvest(pos, player, world, heldItem)) {
             destroyTree(player, world, pos, heldItem);
         }
@@ -40,18 +40,18 @@ public class TreeEvents {
         if (pos == null) {
             return;
         }
-        if (canHarvest(pos, player, player.world, player.getHeldItemMainhand())) {
-            List<BlockPos> connectedLogs = getConnectedLogs(player.world, pos);
+        if (canHarvest(pos, player, player.level, player.getMainHandItem())) {
+            List<BlockPos> connectedLogs = getConnectedLogs(player.level, pos);
             event.setNewSpeed((float) (event.getOriginalSpeed() / Math.min(1D + Main.SERVER_CONFIG.dynamicTreeBreakingPerLog.get() * connectedLogs.size(), Main.SERVER_CONFIG.dynamicTreeBreakingMinSpeed.get())));
         }
     }
 
     public static boolean canHarvest(BlockPos pos, PlayerEntity player, World world, ItemStack heldItem) {
-        if (player.abilities.isCreativeMode) {
+        if (player.abilities.instabuild) {
             return false;
         }
 
-        if (player.isSneaking()) {
+        if (player.isShiftKeyDown()) {
             return false;
         }
 
@@ -63,13 +63,13 @@ public class TreeEvents {
             return false;
         }
 
-        if (!isGround(world, pos.down())) {
+        if (!isGround(world, pos.below())) {
             return false;
         }
 
         BlockState state = world.getBlockState(pos);
         if (state.getProperties().stream().anyMatch(p -> p.equals(RotatedPillarBlock.AXIS))) {
-            if (!state.get(RotatedPillarBlock.AXIS).equals(Direction.Axis.Y)) {
+            if (!state.getValue(RotatedPillarBlock.AXIS).equals(Direction.Axis.Y)) {
                 return false;
             }
         }
@@ -99,7 +99,7 @@ public class TreeEvents {
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
                 for (int z = -1; z <= 1; z++) {
-                    BlockPos p = pos.add(x, y, z);
+                    BlockPos p = pos.offset(x, y, z);
                     if (isLog(world, p)) {
                         if (positions.size() <= 128) {
                             if (positions.add(p)) {
@@ -130,9 +130,9 @@ public class TreeEvents {
 
     private static void destroy(World world, PlayerEntity player, BlockPos pos, ItemStack heldItem) {
         if (heldItem != null) {
-            heldItem.getItem().onBlockDestroyed(heldItem, world, world.getBlockState(pos), pos, player);
+            heldItem.getItem().mineBlock(heldItem, world, world.getBlockState(pos), pos, player);
             world.destroyBlock(pos, true);
-            player.addExhaustion(0.025F);
+            player.causeFoodExhaustion(0.025F);
         }
     }
 

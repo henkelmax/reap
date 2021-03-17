@@ -29,7 +29,7 @@ public class CropEvents {
     }
 
     public static boolean harvest(BlockPos pos, PlayerEntity player) {
-        World world = player.world;
+        World world = player.level;
         BlockState state = world.getBlockState(pos);
         Block blockClicked = state.getBlock();
 
@@ -43,38 +43,38 @@ public class CropEvents {
             return false;
         }
 
-        if (growble.canGrow(world, pos, state, world.isRemote)) {
+        if (growble.isValidBonemealTarget(world, pos, state, world.isClientSide)) {
             return false;
         }
 
-        if (world.isRemote || !(world instanceof ServerWorld)) {
+        if (world.isClientSide || !(world instanceof ServerWorld)) {
             return true;
         }
 
-        LootContext.Builder context = new LootContext.Builder((ServerWorld) world).withParameter(LootParameters.field_237457_g_, new Vector3d(pos.getX(), pos.getY(), pos.getZ())).withParameter(LootParameters.BLOCK_STATE, state).withParameter(LootParameters.THIS_ENTITY, player);
+        LootContext.Builder context = new LootContext.Builder((ServerWorld) world).withParameter(LootParameters.ORIGIN, new Vector3d(pos.getX(), pos.getY(), pos.getZ())).withParameter(LootParameters.BLOCK_STATE, state).withParameter(LootParameters.THIS_ENTITY, player);
 
         if (Main.SERVER_CONFIG.considerTool.get()) {
-            context.withParameter(LootParameters.TOOL, player.getHeldItemMainhand());
+            context.withParameter(LootParameters.TOOL, player.getMainHandItem());
         } else {
             context.withParameter(LootParameters.TOOL, ItemStack.EMPTY);
         }
 
         List<ItemStack> drops = state.getDrops(context);
 
-        BlockState newState = blockClicked.getDefaultState();
+        BlockState newState = blockClicked.defaultBlockState();
 
-        if (state.getProperties().stream().anyMatch(p -> p.equals(HorizontalBlock.HORIZONTAL_FACING))) {
-            newState = newState.with(HorizontalBlock.HORIZONTAL_FACING, state.get(HorizontalBlock.HORIZONTAL_FACING));
+        if (state.getProperties().stream().anyMatch(p -> p.equals(HorizontalBlock.FACING))) {
+            newState = newState.setValue(HorizontalBlock.FACING, state.getValue(HorizontalBlock.FACING));
         }
 
         if (state.getProperties().stream().anyMatch(p -> p.equals(CropsBlock.AGE))) {
-            newState = state.with(CropsBlock.AGE, 0);
+            newState = state.setValue(CropsBlock.AGE, 0);
         }
 
-        world.setBlockState(pos, newState);
+        world.setBlockAndUpdate(pos, newState);
 
         for (ItemStack stack : drops) {
-            InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+            InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
         }
 
         return true;
@@ -88,17 +88,17 @@ public class CropEvents {
         if (block instanceof NetherWartBlock) {
             return new IGrowable() {
                 @Override
-                public boolean canGrow(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
-                    return state.get(NetherWartBlock.AGE) < 3;
+                public boolean isValidBonemealTarget(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
+                    return state.getValue(NetherWartBlock.AGE) < 3;
                 }
 
                 @Override
-                public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, BlockState state) {
+                public boolean isBonemealSuccess(World worldIn, Random rand, BlockPos pos, BlockState state) {
                     return false;
                 }
 
                 @Override
-                public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
+                public void performBonemeal(ServerWorld world, Random random, BlockPos pos, BlockState state) {
                 }
             };
         }
