@@ -1,17 +1,21 @@
 package de.maxhenkel.reap;
 
-import net.minecraft.block.*;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.NetherWartBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -23,13 +27,13 @@ public class CropEvents {
     @SubscribeEvent
     public void onPlayerUse(PlayerInteractEvent.RightClickBlock event) {
         if (harvest(event.getPos(), event.getPlayer())) {
-            event.setCancellationResult(ActionResultType.SUCCESS);
+            event.setCancellationResult(InteractionResult.SUCCESS);
             event.setCanceled(true);
         }
     }
 
-    public static boolean harvest(BlockPos pos, PlayerEntity player) {
-        World world = player.level;
+    public static boolean harvest(BlockPos pos, Player player) {
+        Level world = player.level;
         BlockState state = world.getBlockState(pos);
         Block blockClicked = state.getBlock();
 
@@ -37,7 +41,7 @@ public class CropEvents {
             return false;
         }
 
-        IGrowable growble = getGrowable(blockClicked);
+        BonemealableBlock growble = getGrowable(blockClicked);
 
         if (growble == null) {
             return false;
@@ -47,58 +51,59 @@ public class CropEvents {
             return false;
         }
 
-        if (world.isClientSide || !(world instanceof ServerWorld)) {
+        if (world.isClientSide || !(world instanceof ServerLevel)) {
             return true;
         }
 
-        LootContext.Builder context = new LootContext.Builder((ServerWorld) world).withParameter(LootParameters.ORIGIN, new Vector3d(pos.getX(), pos.getY(), pos.getZ())).withParameter(LootParameters.BLOCK_STATE, state).withParameter(LootParameters.THIS_ENTITY, player);
+        LootContext.Builder context = new LootContext.Builder((ServerLevel) world).withParameter(LootContextParams.ORIGIN, new Vec3(pos.getX(), pos.getY(), pos.getZ())).withParameter(LootContextParams.BLOCK_STATE, state).withParameter(LootContextParams.THIS_ENTITY, player);
 
         if (Main.SERVER_CONFIG.considerTool.get()) {
-            context.withParameter(LootParameters.TOOL, player.getMainHandItem());
+            context.withParameter(LootContextParams.TOOL, player.getMainHandItem());
         } else {
-            context.withParameter(LootParameters.TOOL, ItemStack.EMPTY);
+            context.withParameter(LootContextParams.TOOL, ItemStack.EMPTY);
         }
 
         List<ItemStack> drops = state.getDrops(context);
 
         BlockState newState = blockClicked.defaultBlockState();
 
-        if (state.getProperties().stream().anyMatch(p -> p.equals(HorizontalBlock.FACING))) {
-            newState = newState.setValue(HorizontalBlock.FACING, state.getValue(HorizontalBlock.FACING));
+        if (state.getProperties().stream().anyMatch(p -> p.equals(BlockStateProperties.HORIZONTAL_FACING))) {
+            newState = newState.setValue(BlockStateProperties.HORIZONTAL_FACING, state.getValue(BlockStateProperties.HORIZONTAL_FACING));
         }
 
-        if (state.getProperties().stream().anyMatch(p -> p.equals(CropsBlock.AGE))) {
-            newState = state.setValue(CropsBlock.AGE, 0);
+        if (state.getProperties().stream().anyMatch(p -> p.equals(BlockStateProperties.AGE_7))) {
+            newState = state.setValue(BlockStateProperties.AGE_7, 0);
         }
 
         world.setBlockAndUpdate(pos, newState);
 
         for (ItemStack stack : drops) {
-            InventoryHelper.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+            Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
         }
 
         return true;
     }
 
-    private static IGrowable getGrowable(Block block) {
-        if (block instanceof IGrowable) {
-            return (IGrowable) block;
+    private static BonemealableBlock getGrowable(Block block) {
+        if (block instanceof BonemealableBlock) {
+            return (BonemealableBlock) block;
         }
 
         if (block instanceof NetherWartBlock) {
-            return new IGrowable() {
+            return new BonemealableBlock() {
+
                 @Override
-                public boolean isValidBonemealTarget(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
+                public boolean isValidBonemealTarget(BlockGetter worldIn, BlockPos pos, BlockState state, boolean isClient) {
                     return state.getValue(NetherWartBlock.AGE) < 3;
                 }
 
                 @Override
-                public boolean isBonemealSuccess(World worldIn, Random rand, BlockPos pos, BlockState state) {
+                public boolean isBonemealSuccess(Level worldIn, Random rand, BlockPos pos, BlockState state) {
                     return false;
                 }
 
                 @Override
-                public void performBonemeal(ServerWorld world, Random random, BlockPos pos, BlockState state) {
+                public void performBonemeal(ServerLevel world, Random random, BlockPos pos, BlockState state) {
                 }
             };
         }

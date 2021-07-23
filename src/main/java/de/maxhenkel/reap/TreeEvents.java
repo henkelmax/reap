@@ -1,12 +1,12 @@
 package de.maxhenkel.reap;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.RotatedPillarBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,11 +18,11 @@ public class TreeEvents {
 
     @SubscribeEvent
     public void onBlockBreak(BlockEvent.BreakEvent event) {
-        World world = (World) event.getWorld();
+        Level world = (Level) event.getWorld();
         if (!Main.SERVER_CONFIG.treeHarvest.get() || world.isClientSide()) {
             return;
         }
-        PlayerEntity player = event.getPlayer();
+        Player player = event.getPlayer();
         BlockPos pos = event.getPos();
         ItemStack heldItem = player.getMainHandItem();
         if (canHarvest(pos, player, world, heldItem)) {
@@ -35,7 +35,7 @@ public class TreeEvents {
         if (!Main.SERVER_CONFIG.treeHarvest.get() || !Main.SERVER_CONFIG.dynamicTreeBreakingEnabled.get()) {
             return;
         }
-        PlayerEntity player = event.getPlayer();
+        Player player = event.getPlayer();
         BlockPos pos = event.getPos();
         if (pos == null) {
             return;
@@ -46,8 +46,8 @@ public class TreeEvents {
         }
     }
 
-    public static boolean canHarvest(BlockPos pos, PlayerEntity player, World world, ItemStack heldItem) {
-        if (player.abilities.instabuild) {
+    public static boolean canHarvest(BlockPos pos, Player player, Level world, ItemStack heldItem) {
+        if (player.getAbilities().instabuild) {
             return false;
         }
 
@@ -77,7 +77,7 @@ public class TreeEvents {
         return true;
     }
 
-    private static void destroyTree(PlayerEntity player, World world, BlockPos pos, ItemStack heldItem) {
+    private static void destroyTree(Player player, Level world, BlockPos pos, ItemStack heldItem) {
         List<BlockPos> connectedLogs = getConnectedLogs(world, pos);
 
         for (BlockPos logPos : connectedLogs) {
@@ -85,13 +85,13 @@ public class TreeEvents {
         }
     }
 
-    private static List<BlockPos> getConnectedLogs(World world, BlockPos pos) {
+    private static List<BlockPos> getConnectedLogs(Level world, BlockPos pos) {
         BlockPosList positions = new BlockPosList();
         collectLogs(world, pos, positions);
         return positions;
     }
 
-    private static void collectLogs(World world, BlockPos pos, BlockPosList positions) {
+    private static void collectLogs(Level world, BlockPos pos, BlockPosList positions) {
         if (positions.size() >= 128) {
             return;
         }
@@ -118,17 +118,17 @@ public class TreeEvents {
         }
     }
 
-    private static boolean isLog(World world, BlockPos pos) {
+    private static boolean isLog(Level world, BlockPos pos) {
         BlockState b = world.getBlockState(pos);
         return Main.SERVER_CONFIG.logTypes.stream().anyMatch(tag -> tag.contains(b.getBlock()));
     }
 
-    private static boolean isGround(World world, BlockPos pos) {
+    private static boolean isGround(Level world, BlockPos pos) {
         BlockState b = world.getBlockState(pos);
         return Main.SERVER_CONFIG.groundTypes.stream().anyMatch(tag -> tag.contains(b.getBlock()));
     }
 
-    private static void destroy(World world, PlayerEntity player, BlockPos pos, ItemStack heldItem) {
+    private static void destroy(Level world, Player player, BlockPos pos, ItemStack heldItem) {
         if (heldItem != null) {
             heldItem.getItem().mineBlock(heldItem, world, world.getBlockState(pos), pos, player);
             world.destroyBlock(pos, true);

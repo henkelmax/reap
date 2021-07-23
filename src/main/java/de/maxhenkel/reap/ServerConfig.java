@@ -2,11 +2,11 @@ package de.maxhenkel.reap;
 
 import de.maxhenkel.corelib.config.ConfigBase;
 import de.maxhenkel.corelib.tag.TagUtils;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.tags.ITag;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,10 +25,10 @@ public class ServerConfig extends ConfigBase {
     public final ForgeConfigSpec.DoubleValue dynamicTreeBreakingMinSpeed;
     public final ForgeConfigSpec.DoubleValue dynamicTreeBreakingPerLog;
 
-    public List<ITag<Block>> reapWhitelist;
-    public List<ITag<Block>> logTypes;
-    public List<ITag<Block>> groundTypes;
-    public List<ITag<Item>> allowedTreeTools;
+    public List<Tag<Block>> reapWhitelist;
+    public List<Tag<Block>> logTypes;
+    public List<Tag<Block>> groundTypes;
+    public List<Tag<Item>> allowedTreeTools;
 
     public ServerConfig(ForgeConfigSpec.Builder builder) {
         super(builder);
@@ -96,7 +96,7 @@ public class ServerConfig extends ConfigBase {
     }
 
     @Override
-    public void onReload(ModConfig.ModConfigEvent event) {
+    public void onReload(ModConfigEvent event) {
         super.onReload(event);
         reapWhitelist = reapWhitelistSpec.get().stream().map(s -> TagUtils.getBlock(s, true)).filter(Objects::nonNull).collect(Collectors.toList());
         logTypes = logTypesSpec.get().stream().map(s -> TagUtils.getBlock(s, true)).filter(Objects::nonNull).collect(Collectors.toList());
