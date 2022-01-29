@@ -21,6 +21,7 @@ public class ServerConfig extends ConfigBase {
     private final ForgeConfigSpec.ConfigValue<List<? extends String>> allowedTreeToolsSpec;
     public final ForgeConfigSpec.BooleanValue considerTool;
     public final ForgeConfigSpec.BooleanValue treeHarvest;
+    public final ForgeConfigSpec.IntValue treeHarvestMaxCount;
     public final ForgeConfigSpec.BooleanValue dynamicTreeBreakingEnabled;
     public final ForgeConfigSpec.DoubleValue dynamicTreeBreakingMinSpeed;
     public final ForgeConfigSpec.DoubleValue dynamicTreeBreakingPerLog;
@@ -84,6 +85,9 @@ public class ServerConfig extends ConfigBase {
         treeHarvest = builder
                 .comment("If the tree harvester should be enabled")
                 .define("tree_harvesting.enabled", true);
+        treeHarvestMaxCount = builder
+                .comment("The maximum amount of logs one harvest is allowed to do")
+                .defineInRange("tree_harvesting.max_harvesting_count", 128, 0, 1024);
         dynamicTreeBreakingEnabled = builder
                 .comment("If bigger trees should be harder to break")
                 .define("tree_harvesting.dynamic_breaking_speed.enabled", true);

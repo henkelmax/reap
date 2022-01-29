@@ -92,7 +92,8 @@ public class TreeEvents {
     }
 
     private static void collectLogs(Level world, BlockPos pos, BlockPosList positions) {
-        if (positions.size() >= 128) {
+        int maxHarvestingCount = Main.SERVER_CONFIG.treeHarvestMaxCount.get();
+        if (positions.size() >= maxHarvestingCount) {
             return;
         }
         List<BlockPos> posList = new ArrayList<>();
@@ -101,7 +102,7 @@ public class TreeEvents {
                 for (int z = -1; z <= 1; z++) {
                     BlockPos p = pos.offset(x, y, z);
                     if (isLog(world, p)) {
-                        if (positions.size() <= 128) {
+                        if (positions.size() <= maxHarvestingCount) {
                             if (positions.add(p)) {
                                 posList.add(p);
                             }
