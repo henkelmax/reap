@@ -1,1 +1,1 @@
-- Added Config option to specify the maximum amount of logs to get harvested in one go
+- Updated to 1.18.2
