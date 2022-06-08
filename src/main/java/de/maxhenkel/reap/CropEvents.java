@@ -2,6 +2,7 @@ package de.maxhenkel.reap;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -20,7 +21,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.List;
-import java.util.Random;
 
 public class CropEvents {
 
@@ -98,12 +98,13 @@ public class CropEvents {
                 }
 
                 @Override
-                public boolean isBonemealSuccess(Level worldIn, Random rand, BlockPos pos, BlockState state) {
+                public boolean isBonemealSuccess(Level level, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
                     return false;
                 }
 
                 @Override
-                public void performBonemeal(ServerLevel world, Random random, BlockPos pos, BlockState state) {
+                public void performBonemeal(ServerLevel serverLevel, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
+
                 }
             };
         }
