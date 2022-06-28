@@ -1,5 +1,6 @@
-# Reap Mod ![](http://cf.way2muchnoise.eu/full_244256_downloads.svg)
-![](http://cf.way2muchnoise.eu/versions/244256.svg)
+<!-- modrinth_exclude.start -->
+
+# Reap Mod ![](http://cf.way2muchnoise.eu/full_244256_downloads.svg) ![](http://cf.way2muchnoise.eu/versions/244256.svg)
 
 ## Links
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/reap-mod)
@@ -9,6 +10,8 @@
 - [Credits](https://modrepo.de/minecraft/reap/credits)
 
 ---
+
+<!-- modrinth_exclude.end -->
 
 This mod adds a function that harvests crops by right-clicking.
 Optionally you can enable tree harvesting in the config.
