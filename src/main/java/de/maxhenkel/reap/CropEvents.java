@@ -26,7 +26,7 @@ public class CropEvents {
 
     @SubscribeEvent
     public void onPlayerUse(PlayerInteractEvent.RightClickBlock event) {
-        if (harvest(event.getPos(), event.getPlayer())) {
+        if (harvest(event.getPos(), event.getEntity())) {
             event.setCancellationResult(InteractionResult.SUCCESS);
             event.setCanceled(true);
         }

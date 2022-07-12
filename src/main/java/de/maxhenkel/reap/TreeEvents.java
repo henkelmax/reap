@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public class TreeEvents {
 
     @SubscribeEvent
     public void onBlockBreak(BlockEvent.BreakEvent event) {
-        Level world = (Level) event.getWorld();
+        Level world = (Level) event.getLevel();
         if (!Main.SERVER_CONFIG.treeHarvest.get() || world.isClientSide()) {
             return;
         }
@@ -35,7 +35,7 @@ public class TreeEvents {
         if (!Main.SERVER_CONFIG.treeHarvest.get() || !Main.SERVER_CONFIG.dynamicTreeBreakingEnabled.get()) {
             return;
         }
-        Player player = event.getPlayer();
+        Player player = event.getEntity();
         BlockPos pos = event.getPos();
         if (pos == null) {
             return;
