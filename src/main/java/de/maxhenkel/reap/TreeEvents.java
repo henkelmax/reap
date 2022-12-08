@@ -36,7 +36,7 @@ public class TreeEvents {
             return;
         }
         Player player = event.getEntity();
-        BlockPos pos = event.getPos();
+        BlockPos pos = event.getPosition().orElse(null);
         if (pos == null) {
             return;
         }
