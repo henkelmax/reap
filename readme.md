@@ -4,10 +4,6 @@
 
 ## Links
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/reap-mod)
-- [ModRepo](https://modrepo.de/minecraft/reap/overview)
-- [GitHub](https://github.com/henkelmax/reap)
-- [FAQ](https://modrepo.de/minecraft/reap/faq)
-- [Credits](https://modrepo.de/minecraft/reap/credits)
 
 ---
 
