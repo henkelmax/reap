@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.NetherWartBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -33,7 +33,7 @@ public class CropEvents {
     }
 
     public static boolean harvest(BlockPos pos, Player player) {
-        Level world = player.level;
+        Level world = player.level();
         BlockState state = world.getBlockState(pos);
         Block blockClicked = state.getBlock();
 
@@ -41,13 +41,13 @@ public class CropEvents {
             return false;
         }
 
-        BonemealableBlock growble = getGrowable(blockClicked);
+        BonemealableBlock growable = getGrowable(blockClicked);
 
-        if (growble == null) {
+        if (growable == null) {
             return false;
         }
 
-        if (growble.isValidBonemealTarget(world, pos, state, world.isClientSide)) {
+        if (growable.isValidBonemealTarget(world, pos, state, world.isClientSide)) {
             return false;
         }
 
@@ -55,7 +55,7 @@ public class CropEvents {
             return true;
         }
 
-        LootContext.Builder context = new LootContext.Builder((ServerLevel) world).withParameter(LootContextParams.ORIGIN, new Vec3(pos.getX(), pos.getY(), pos.getZ())).withParameter(LootContextParams.BLOCK_STATE, state).withParameter(LootContextParams.THIS_ENTITY, player);
+        LootParams.Builder context = new LootParams.Builder((ServerLevel) world).withParameter(LootContextParams.ORIGIN, new Vec3(pos.getX(), pos.getY(), pos.getZ())).withParameter(LootContextParams.BLOCK_STATE, state).withParameter(LootContextParams.THIS_ENTITY, player);
 
         if (Main.SERVER_CONFIG.considerTool.get()) {
             context.withParameter(LootContextParams.TOOL, player.getMainHandItem());

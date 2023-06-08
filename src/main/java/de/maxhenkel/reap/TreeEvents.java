@@ -40,8 +40,8 @@ public class TreeEvents {
         if (pos == null) {
             return;
         }
-        if (canHarvest(pos, player, player.level, player.getMainHandItem())) {
-            List<BlockPos> connectedLogs = getConnectedLogs(player.level, pos);
+        if (canHarvest(pos, player, player.level(), player.getMainHandItem())) {
+            List<BlockPos> connectedLogs = getConnectedLogs(player.level(), pos);
             event.setNewSpeed((float) (event.getOriginalSpeed() / Math.min(1D + Main.SERVER_CONFIG.dynamicTreeBreakingPerLog.get() * connectedLogs.size(), Main.SERVER_CONFIG.dynamicTreeBreakingMinSpeed.get())));
         }
     }
