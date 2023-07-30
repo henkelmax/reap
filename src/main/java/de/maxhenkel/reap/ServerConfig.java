@@ -54,7 +54,9 @@ public class ServerConfig extends ConfigBase {
                         "minecraft:oak_log",
                         "minecraft:spruce_log",
                         "minecraft:crimson_stem",
-                        "minecraft:warped_stem"
+                        "minecraft:warped_stem",
+                        "minecraft:mangrove_log",
+                        "minecraft:cherry_log"
                 ), Objects::nonNull);
         groundTypesSpec = builder
                 .comment("The blocks that are allowed below logs that can be harvested")
