@@ -1,1 +1,1 @@
-- Added mangrove and cherry logs to config
+- Switch to NeoGradle

@@ -8,8 +8,6 @@ version="${mod_version}"
 displayName="${mod_name}"
 updateJSONURL="https://maxhenkel.de/update/reap.json"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/reap-mod"
-# logoFile="reap.png"
-# credits=""
 authors="${mod_vendor}"
 description='''Harvest crops by right-clicking'''
 [[dependencies.${mod_id}]]

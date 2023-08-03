@@ -1,8 +1,10 @@
 <!-- modrinth_exclude.start -->
 
-# Reap Mod ![](http://cf.way2muchnoise.eu/full_244256_downloads.svg) ![](http://cf.way2muchnoise.eu/versions/244256.svg)
+# Reap Mod
 
 ## Links
+
+- [Modrinth](https://modrinth.com/mod/reap-mod)
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/reap-mod)
 
 ---
