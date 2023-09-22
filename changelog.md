@@ -1,1 +1,1 @@
-- Switch to NeoGradle
+- Updated to 1.20.2

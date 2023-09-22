@@ -47,7 +47,7 @@ public class CropEvents {
             return false;
         }
 
-        if (growable.isValidBonemealTarget(world, pos, state, world.isClientSide)) {
+        if (growable.isValidBonemealTarget(world, pos, state)) {
             return false;
         }
 
@@ -93,7 +93,7 @@ public class CropEvents {
             return new BonemealableBlock() {
 
                 @Override
-                public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos pos, BlockState state, boolean isClient) {
+                public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos pos, BlockState state) {
                     return state.getValue(NetherWartBlock.AGE) < 3;
                 }
 
