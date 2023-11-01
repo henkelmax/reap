@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="${mod_loader_version}"
+loaderVersion="${loader_version}"
 license="All rights reserved"
 issueTrackerURL="https://github.com/henkelmax/reap/issues"
 [[mods]]
@@ -11,14 +11,14 @@ displayURL="https://www.curseforge.com/minecraft/mc-mods/reap-mod"
 authors="${mod_vendor}"
 description='''Harvest crops by right-clicking'''
 [[dependencies.${mod_id}]]
-    modId="forge"
+    modId="neoforge"
     mandatory=true
-    versionRange="${mod_forge_version}"
+    versionRange="${neoforge_version_range}"
     ordering="NONE"
     side="BOTH"
 [[dependencies.${mod_id}]]
     modId="minecraft"
     mandatory=true
-    versionRange="[${mod_minecraft_version}]"
+    versionRange="[${minecraft_version}]"
     ordering="NONE"
     side="BOTH"

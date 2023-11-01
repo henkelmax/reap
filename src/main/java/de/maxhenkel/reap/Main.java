@@ -1,12 +1,12 @@
 package de.maxhenkel.reap;
 
 import de.maxhenkel.corelib.CommonRegistry;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.common.NeoForge;
 
 @Mod(Main.MODID)
 public class Main {
@@ -23,8 +23,8 @@ public class Main {
 
     @SubscribeEvent
     public void commonSetup(FMLCommonSetupEvent event) {
-        MinecraftForge.EVENT_BUS.register(new CropEvents());
-        MinecraftForge.EVENT_BUS.register(new TreeEvents());
+        NeoForge.EVENT_BUS.register(new CropEvents());
+        NeoForge.EVENT_BUS.register(new TreeEvents());
     }
 
 }

@@ -5,8 +5,8 @@ import de.maxhenkel.corelib.tag.Tag;
 import de.maxhenkel.corelib.tag.TagUtils;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,23 +15,23 @@ import java.util.stream.Collectors;
 
 public class ServerConfig extends ConfigBase {
 
-    private final ForgeConfigSpec.ConfigValue<List<? extends String>> reapWhitelistSpec;
-    private final ForgeConfigSpec.ConfigValue<List<? extends String>> logTypesSpec;
-    private final ForgeConfigSpec.ConfigValue<List<? extends String>> groundTypesSpec;
-    private final ForgeConfigSpec.ConfigValue<List<? extends String>> allowedTreeToolsSpec;
-    public final ForgeConfigSpec.BooleanValue considerTool;
-    public final ForgeConfigSpec.BooleanValue treeHarvest;
-    public final ForgeConfigSpec.IntValue treeHarvestMaxCount;
-    public final ForgeConfigSpec.BooleanValue dynamicTreeBreakingEnabled;
-    public final ForgeConfigSpec.DoubleValue dynamicTreeBreakingMinSpeed;
-    public final ForgeConfigSpec.DoubleValue dynamicTreeBreakingPerLog;
+    private final ModConfigSpec.ConfigValue<List<? extends String>> reapWhitelistSpec;
+    private final ModConfigSpec.ConfigValue<List<? extends String>> logTypesSpec;
+    private final ModConfigSpec.ConfigValue<List<? extends String>> groundTypesSpec;
+    private final ModConfigSpec.ConfigValue<List<? extends String>> allowedTreeToolsSpec;
+    public final ModConfigSpec.BooleanValue considerTool;
+    public final ModConfigSpec.BooleanValue treeHarvest;
+    public final ModConfigSpec.IntValue treeHarvestMaxCount;
+    public final ModConfigSpec.BooleanValue dynamicTreeBreakingEnabled;
+    public final ModConfigSpec.DoubleValue dynamicTreeBreakingMinSpeed;
+    public final ModConfigSpec.DoubleValue dynamicTreeBreakingPerLog;
 
     public List<Tag<Block>> reapWhitelist;
     public List<Tag<Block>> logTypes;
     public List<Tag<Block>> groundTypes;
     public List<Tag<Item>> allowedTreeTools;
 
-    public ServerConfig(ForgeConfigSpec.Builder builder) {
+    public ServerConfig(ModConfigSpec.Builder builder) {
         super(builder);
         reapWhitelistSpec = builder
                 .comment("The blocks that should get harvested by right-clicking")
