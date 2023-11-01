@@ -1,1 +1,1 @@
-- Ported to NeoForge
+- Fixed update checker URL
