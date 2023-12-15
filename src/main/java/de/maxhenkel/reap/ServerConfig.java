@@ -36,39 +36,29 @@ public class ServerConfig extends ConfigBase {
         reapWhitelistSpec = builder
                 .comment("The blocks that should get harvested by right-clicking")
                 .defineList("crop_harvesting.whitelist", Arrays.asList(
-                        "minecraft:nether_wart",
-                        "minecraft:potatoes",
-                        "minecraft:carrots",
-                        "minecraft:wheat",
-                        "minecraft:beetroots",
-                        "minecraft:cocoa"
+                        "#minecraft:crops"
                 ), Objects::nonNull);
         logTypesSpec = builder
                 .comment("The log blocks that are allowed to get harvested by the tree harvester")
                 .comment("Examples: 'minecraft:oak_log', '#minecraft:logs'")
                 .defineList("tree_harvesting.log_types", Arrays.asList(
-                        "minecraft:logs"
+                        "#minecraft:logs"
                 ), Objects::nonNull);
         groundTypesSpec = builder
                 .comment("The blocks that are allowed below logs that can be harvested")
                 .comment("Examples: 'minecraft:dirt', '#forge:sand/colorless'")
                 .defineList("tree_harvesting.ground_types", Arrays.asList(
-                        "minecraft:dirt",
-                        "minecraft:grass_block",
-                        "minecraft:coarse_dirt",
-                        "minecraft:podzol",
-                        "minecraft:mycelium",
-                        "minecraft:warped_nylium",
-                        "minecraft:crimson_nylium",
-                        "minecraft:netherrack",
-                        "forge:sand"
+                        "#minecraft:dirt",
+                        "#minecraft:sand",
+                        "#minecraft:nylium",
+                        "minecraft:mycelium"
                 ), Objects::nonNull);
         allowedTreeToolsSpec = builder
                 .comment("The tools which the player is allowed to harvest trees")
                 .defineList("tree_harvesting.allowed_tree_tools", Arrays.asList(
-                        "minecraft:axes",
-                        "forge:axes",
-                        "forge:tools/paxels"
+                        "#minecraft:axes",
+                        "#forge:axes",
+                        "#forge:tools/paxels"
                 ), Objects::nonNull);
         considerTool = builder
                 .comment("If the held tool should be considered when right-click harvesting")
