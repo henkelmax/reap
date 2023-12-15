@@ -47,16 +47,7 @@ public class ServerConfig extends ConfigBase {
                 .comment("The log blocks that are allowed to get harvested by the tree harvester")
                 .comment("Examples: 'minecraft:oak_log', '#minecraft:logs'")
                 .defineList("tree_harvesting.log_types", Arrays.asList(
-                        "minecraft:acacia_log",
-                        "minecraft:birch_log",
-                        "minecraft:dark_oak_log",
-                        "minecraft:jungle_log",
-                        "minecraft:oak_log",
-                        "minecraft:spruce_log",
-                        "minecraft:crimson_stem",
-                        "minecraft:warped_stem",
-                        "minecraft:mangrove_log",
-                        "minecraft:cherry_log"
+                        "minecraft:logs"
                 ), Objects::nonNull);
         groundTypesSpec = builder
                 .comment("The blocks that are allowed below logs that can be harvested")
@@ -69,17 +60,15 @@ public class ServerConfig extends ConfigBase {
                         "minecraft:mycelium",
                         "minecraft:warped_nylium",
                         "minecraft:crimson_nylium",
-                        "minecraft:netherrack"
+                        "minecraft:netherrack",
+                        "forge:sand"
                 ), Objects::nonNull);
         allowedTreeToolsSpec = builder
                 .comment("The tools which the player is allowed to harvest trees")
                 .defineList("tree_harvesting.allowed_tree_tools", Arrays.asList(
-                        "minecraft:wooden_axe",
-                        "minecraft:golden_axe",
-                        "minecraft:stone_axe",
-                        "minecraft:iron_axe",
-                        "minecraft:diamond_axe",
-                        "minecraft:netherite_axe"
+                        "minecraft:axes",
+                        "forge:axes",
+                        "forge:tools/paxels"
                 ), Objects::nonNull);
         considerTool = builder
                 .comment("If the held tool should be considered when right-click harvesting")
