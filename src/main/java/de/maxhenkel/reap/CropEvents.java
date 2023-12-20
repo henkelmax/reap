@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -26,13 +27,13 @@ public class CropEvents {
 
     @SubscribeEvent
     public void onPlayerUse(PlayerInteractEvent.RightClickBlock event) {
-        if (harvest(event.getPos(), event.getEntity())) {
+        if (harvest(event.getHitVec(), event.getPos(), event.getEntity())) {
             event.setCancellationResult(InteractionResult.SUCCESS);
             event.setCanceled(true);
         }
     }
 
-    public static boolean harvest(BlockPos pos, Player player) {
+    public static boolean harvest(BlockHitResult hitResult, BlockPos pos, Player player) {
         Level world = player.level();
         BlockState state = world.getBlockState(pos);
         Block blockClicked = state.getBlock();
@@ -77,7 +78,14 @@ public class CropEvents {
 
         world.setBlockAndUpdate(pos, newState);
 
+        ItemStack clickedBlockItem = state.getCloneItemStack(hitResult, world, pos, player);
         for (ItemStack stack : drops) {
+            if (stack.is(clickedBlockItem.getItem())) {
+                stack.shrink(1);
+            }
+            if (stack.isEmpty()) {
+                continue;
+            }
             Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), stack);
         }
 
