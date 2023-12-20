@@ -1,6 +1,8 @@
 pluginManagement {
     repositories {
         gradlePluginPortal()
+        maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+        maven { url = 'https://maven.maxhenkel.de/repository/public' }
         maven { url = 'https://maven.minecraftforge.net/' }
     }
 }
