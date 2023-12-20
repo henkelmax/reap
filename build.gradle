@@ -10,9 +10,9 @@ plugins {
 apply from: "https://raw.githubusercontent.com/henkelmax/mod-gradle-scripts/${mod_gradle_script_version}/mod.gradle"
 
 dependencies {
-    shadow "de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}:api"
-    runtimeOnly "de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}"
-    compileOnly "de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}:javadoc"
+    shadow fg.deobf("de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}:api")
+    runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}")
+    compileOnly fg.deobf("de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}:javadoc")
 }
 
 processResources {
