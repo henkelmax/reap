@@ -1,1 +1,1 @@
-- Switch to NeoGradle
+- Added mod icon
