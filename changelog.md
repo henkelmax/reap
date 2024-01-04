@@ -1,2 +1,1 @@
-- Added mod icon
-- Fixed too many seeds dropped
+- Updated NeoForge
