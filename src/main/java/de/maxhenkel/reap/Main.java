@@ -18,7 +18,7 @@ public class Main {
     public Main(IEventBus eventBus) {
         eventBus.addListener(this::commonSetup);
 
-        SERVER_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.SERVER, ServerConfig.class, true);
+        SERVER_CONFIG = CommonRegistry.registerConfig(MODID, ModConfig.Type.SERVER, ServerConfig.class, true);
     }
 
     @SubscribeEvent
