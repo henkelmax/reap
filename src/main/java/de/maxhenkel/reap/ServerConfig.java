@@ -102,8 +102,18 @@ public class ServerConfig extends ConfigBase {
     }
 
     @Override
-    public void onReload(ModConfigEvent event) {
+    public void onLoad(ModConfigEvent.Loading evt) {
+        super.onLoad(evt);
+        onConfigChange();
+    }
+
+    @Override
+    public void onReload(ModConfigEvent.Reloading event) {
         super.onReload(event);
+        onConfigChange();
+    }
+
+    private void onConfigChange() {
         reapWhitelist = reapWhitelistSpec.get().stream().map(s -> TagUtils.getBlock(s, true)).filter(Objects::nonNull).collect(Collectors.toList());
         logTypes = logTypesSpec.get().stream().map(s -> TagUtils.getBlock(s, true)).filter(Objects::nonNull).collect(Collectors.toList());
         groundTypes = groundTypesSpec.get().stream().map(s -> TagUtils.getBlock(s, true)).filter(Objects::nonNull).collect(Collectors.toList());
