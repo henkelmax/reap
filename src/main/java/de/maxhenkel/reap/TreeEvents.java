@@ -68,16 +68,12 @@ public class TreeEvents {
             return false;
         }
 
-//        if (!isGround(level, pos.below())) {
-//            return false;
-//        }
-
         return true;
     }
 
     private static boolean isLog(Level world, BlockPos pos) {
         BlockState b = world.getBlockState(pos);
-        return Main.SERVER_CONFIG.logTypes.stream().anyMatch(tag -> tag.contains(b.getBlock()));
+        return Main.SERVER_CONFIG.logTypes.stream().anyMatch(tag -> tag.contains(b.getBlock())) || b.is(BlockTags.LOGS);
     }
 
     private static boolean isGround(Level world, BlockPos pos) {
@@ -169,16 +165,15 @@ public class TreeEvents {
     // Naturally generated leaves don't have BlockStateProperties.PERSISTENT property, meaning it's a real tree.
     // If there is BlockStateProperties.PERSISTENT property, it means the leave block is placed by player, meaning it's not a natural tree.
     private static boolean isLeaves(final BlockState blockState) {
-//        if (!(blockState.getBlock() instanceof LeavesBlock)) {
-//            return false;
-//        }
-        final Collection<Property<?>> properties = blockState.getProperties();
-        if (properties.contains(BlockStateProperties.PERSISTENT)) {
-            final boolean persistent = blockState.getValue(BlockStateProperties.PERSISTENT);
-            if (persistent) {
-                return false;
+        if (blockState.getBlock() instanceof LeavesBlock) {
+            final Collection<Property<?>> properties = blockState.getProperties();
+            if (properties.contains(BlockStateProperties.PERSISTENT)) {
+                final boolean persistent = blockState.getValue(BlockStateProperties.PERSISTENT);
+                return !persistent;
             }
+            return true;
+        } else {
+            return blockState.is(BlockTags.WART_BLOCKS);
         }
-        return blockState.getBlock() instanceof LeavesBlock || blockState.is(BlockTags.WART_BLOCKS);
     }
 }
