@@ -68,6 +68,10 @@ public class TreeEvents {
             return false;
         }
 
+        if (!isGround(level, pos.below())) {
+            return false;
+        }
+
         return true;
     }
 

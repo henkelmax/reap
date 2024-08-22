@@ -17,7 +17,7 @@ public class ServerConfig extends ConfigBase {
 
     private final ModConfigSpec.ConfigValue<List<? extends String>> reapWhitelistSpec;
     private final ModConfigSpec.ConfigValue<List<? extends String>> logTypesSpec;
-//    private final ModConfigSpec.ConfigValue<List<? extends String>> groundTypesSpec;
+    private final ModConfigSpec.ConfigValue<List<? extends String>> groundTypesSpec;
     private final ModConfigSpec.ConfigValue<List<? extends String>> allowedTreeToolsSpec;
     public final ModConfigSpec.BooleanValue considerTool;
     public final ModConfigSpec.BooleanValue treeHarvest;
@@ -58,19 +58,19 @@ public class ServerConfig extends ConfigBase {
                         "minecraft:mangrove_log",
                         "minecraft:cherry_log"
                 ), Objects::nonNull);
-//        groundTypesSpec = builder
-//                .comment("The blocks that are allowed below logs that can be harvested")
-//                .comment("Examples: 'minecraft:dirt', '#forge:sand/colorless'")
-//                .defineList("tree_harvesting.ground_types", Arrays.asList(
-//                        "minecraft:dirt",
-//                        "minecraft:grass_block",
-//                        "minecraft:coarse_dirt",
-//                        "minecraft:podzol",
-//                        "minecraft:mycelium",
-//                        "minecraft:warped_nylium",
-//                        "minecraft:crimson_nylium",
-//                        "minecraft:netherrack"
-//                ), Objects::nonNull);
+        groundTypesSpec = builder
+                .comment("The blocks that are allowed below logs that can be harvested")
+                .comment("Examples: 'minecraft:dirt', '#forge:sand/colorless'")
+                .defineList("tree_harvesting.ground_types", Arrays.asList(
+                        "minecraft:dirt",
+                        "minecraft:grass_block",
+                        "minecraft:coarse_dirt",
+                        "minecraft:podzol",
+                        "minecraft:mycelium",
+                        "minecraft:warped_nylium",
+                        "minecraft:crimson_nylium",
+                        "minecraft:netherrack"
+                ), Objects::nonNull);
         allowedTreeToolsSpec = builder
                 .comment("The tools which the player is allowed to harvest trees")
                 .defineList("tree_harvesting.allowed_tree_tools", Arrays.asList(
@@ -116,8 +116,7 @@ public class ServerConfig extends ConfigBase {
     private void onConfigChange() {
         reapWhitelist = reapWhitelistSpec.get().stream().map(s -> TagUtils.getBlock(s, true)).filter(Objects::nonNull).collect(Collectors.toList());
         logTypes = logTypesSpec.get().stream().map(s -> TagUtils.getBlock(s, true)).filter(Objects::nonNull).collect(Collectors.toList());
-//        groundTypes = groundTypesSpec.get().stream().map(s -> TagUtils.getBlock(s, true)).filter(Objects::nonNull).collect(Collectors.toList());
+        groundTypes = groundTypesSpec.get().stream().map(s -> TagUtils.getBlock(s, true)).filter(Objects::nonNull).collect(Collectors.toList());
         allowedTreeTools = allowedTreeToolsSpec.get().stream().map(s -> TagUtils.getItem(s, true)).filter(Objects::nonNull).collect(Collectors.toList());
     }
-
 }
