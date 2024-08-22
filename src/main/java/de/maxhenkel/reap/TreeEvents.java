@@ -28,7 +28,7 @@ public class TreeEvents {
         }
         Player player = event.getPlayer();
         BlockPos pos = event.getPos();
-        if (canHarvest(player)) {
+        if (canHarvest(player, pos)) {
             destroyTree(player, world, pos);
         }
     }
@@ -43,14 +43,15 @@ public class TreeEvents {
         if (pos == null) {
             return;
         }
-        if (canHarvest(player)) {
+        if (canHarvest(player, pos)) {
             LinkedList<BlockPos> connectedLogs = scanForTree(player.level(), pos);
             event.setNewSpeed((float) (event.getOriginalSpeed() / Math.min(1D + Main.SERVER_CONFIG.dynamicTreeBreakingPerLog.get() * connectedLogs.size(), Main.SERVER_CONFIG.dynamicTreeBreakingMinSpeed.get())));
         }
     }
 
-    public static boolean canHarvest(Player player) {
+    public static boolean canHarvest(Player player, BlockPos pos) {
         ItemStack heldItem = player.getMainHandItem();
+        Level level = player.level();
         if (player.getAbilities().instabuild) {
             return false;
         }
@@ -63,7 +64,25 @@ public class TreeEvents {
             return false;
         }
 
+        if (!isLog(level, pos)) {
+            return false;
+        }
+
+//        if (!isGround(level, pos.below())) {
+//            return false;
+//        }
+
         return true;
+    }
+
+    private static boolean isLog(Level world, BlockPos pos) {
+        BlockState b = world.getBlockState(pos);
+        return Main.SERVER_CONFIG.logTypes.stream().anyMatch(tag -> tag.contains(b.getBlock()));
+    }
+
+    private static boolean isGround(Level world, BlockPos pos) {
+        BlockState b = world.getBlockState(pos);
+        return Main.SERVER_CONFIG.groundTypes.stream().anyMatch(tag -> tag.contains(b.getBlock()));
     }
 
     private void destroyTree(Player player, Level world, BlockPos pos) {
@@ -84,8 +103,7 @@ public class TreeEvents {
 
     // tree detector
     public static LinkedList<BlockPos> scanForTree(final LevelReader level, final BlockPos start) {
-        final BlockState blockState = level.getBlockState(start);
-        if (!blockState.is(BlockTags.LOGS)) {
+        if (!isLog((Level) level, start)) {
             return new LinkedList<>();
         }
 
@@ -151,9 +169,9 @@ public class TreeEvents {
     // Naturally generated leaves don't have BlockStateProperties.PERSISTENT property, meaning it's a real tree.
     // If there is BlockStateProperties.PERSISTENT property, it means the leave block is placed by player, meaning it's not a natural tree.
     private static boolean isLeaves(final BlockState blockState) {
-        if (!(blockState.getBlock() instanceof LeavesBlock)) {
-            return false;
-        }
+//        if (!(blockState.getBlock() instanceof LeavesBlock)) {
+//            return false;
+//        }
         final Collection<Property<?>> properties = blockState.getProperties();
         if (properties.contains(BlockStateProperties.PERSISTENT)) {
             final boolean persistent = blockState.getValue(BlockStateProperties.PERSISTENT);
@@ -161,6 +179,6 @@ public class TreeEvents {
                 return false;
             }
         }
-        return blockState.getBlock() instanceof LeavesBlock;
+        return blockState.getBlock() instanceof LeavesBlock || blockState.is(BlockTags.WART_BLOCKS);
     }
 }
