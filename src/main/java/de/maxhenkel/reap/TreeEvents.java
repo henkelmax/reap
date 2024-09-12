@@ -102,13 +102,13 @@ public class TreeEvents {
     }
 
     // tree detector
-    public static LinkedList<BlockPos> scanForTree(final LevelReader level, final BlockPos start) {
+    public static LinkedList<BlockPos> scanForTree(LevelReader level, BlockPos start) {
         if (!isLog((Level) level, start)) {
             return new LinkedList<>();
         }
 
-        final boolean[] leavesFound = new boolean[1];
-        final LinkedList<BlockPos> result =
+        boolean[] leavesFound = new boolean[1];
+        LinkedList<BlockPos> result =
                 recursiveSearch(level, start, (pos, bs, isRightBlock) -> {
                     if (isLeaves(bs)) {
                         leavesFound[0] = true;
@@ -124,29 +124,29 @@ public class TreeEvents {
     }
 
     // Recursively scan 3x3x3 cubes while keeping track of already scanned blocks to avoid cycles.
-    private static LinkedList<BlockPos> recursiveSearch(final LevelReader world, final BlockPos start, @Nullable final BlockAction action) {
-        final Block wantedBlock = world.getBlockState(start).getBlock();
+    private static LinkedList<BlockPos> recursiveSearch(LevelReader world, BlockPos start, @Nullable BlockAction action) {
+        Block wantedBlock = world.getBlockState(start).getBlock();
         boolean abort = false;
-        final LinkedList<BlockPos> result = new LinkedList<>();
-        final Set<BlockPos> visited = new HashSet<>();
-        final LinkedList<BlockPos> queue = new LinkedList<>();
+        LinkedList<BlockPos> result = new LinkedList<>();
+        Set<BlockPos> visited = new HashSet<>();
+        LinkedList<BlockPos> queue = new LinkedList<>();
         int maxHarvestingCount = Main.SERVER_CONFIG.treeHarvestMaxCount.get();
         queue.push(start);
 
         while (!queue.isEmpty()) {
-            final BlockPos center = queue.pop();
-            final int x0 = center.getX();
-            final int y0 = center.getY();
-            final int z0 = center.getZ();
+            BlockPos center = queue.pop();
+            int x0 = center.getX();
+            int y0 = center.getY();
+            int z0 = center.getZ();
             for (int z = z0 - 1; z <= z0 + 1 && !abort; ++z) {
                 for (int y = y0 - 1; y <= y0 + 1 && !abort; ++y) {
                     for (int x = x0 - 1; x <= x0 + 1 && !abort; ++x) {
-                        final BlockPos pos = new BlockPos(x, y, z);
-                        final BlockState bs = world.getBlockState(pos);
+                        BlockPos pos = new BlockPos(x, y, z);
+                        BlockState bs = world.getBlockState(pos);
                         if ((bs.isAir() || !visited.add(pos))) {
                             continue;
                         }
-                        final boolean isRightBlock = bs.is(wantedBlock);
+                        boolean isRightBlock = bs.is(wantedBlock);
                         if (isRightBlock) {
                             result.add(pos);
                             if (queue.size() > maxHarvestingCount) {
@@ -168,12 +168,11 @@ public class TreeEvents {
     // leaves detector
     // Naturally generated leaves don't have BlockStateProperties.PERSISTENT property, meaning it's a real tree.
     // If there is BlockStateProperties.PERSISTENT property, it means the leave block is placed by player, meaning it's not a natural tree.
-    private static boolean isLeaves(final BlockState blockState) {
+    private static boolean isLeaves(BlockState blockState) {
         if (blockState.getBlock() instanceof LeavesBlock) {
-            final Collection<Property<?>> properties = blockState.getProperties();
+            Collection<Property<?>> properties = blockState.getProperties();
             if (properties.contains(BlockStateProperties.PERSISTENT)) {
-                final boolean persistent = blockState.getValue(BlockStateProperties.PERSISTENT);
-                return !persistent;
+                return !blockState.getValue(BlockStateProperties.PERSISTENT);
             }
             return true;
         } else {
