@@ -77,7 +77,7 @@ public class TreeEvents {
 
     private static boolean isLog(Level world, BlockPos pos) {
         BlockState b = world.getBlockState(pos);
-        return Main.SERVER_CONFIG.logTypes.stream().anyMatch(tag -> tag.contains(b.getBlock())) || b.is(BlockTags.LOGS);
+        return Main.SERVER_CONFIG.logTypes.stream().anyMatch(tag -> tag.contains(b.getBlock()));
     }
 
     private static boolean isGround(Level world, BlockPos pos) {
@@ -101,29 +101,35 @@ public class TreeEvents {
         }
     }
 
-    // tree detector
     public static LinkedList<BlockPos> scanForTree(LevelReader level, BlockPos start) {
         if (!isLog((Level) level, start)) {
             return new LinkedList<>();
         }
-
+        BlockState state = level.getBlockState(start);
         boolean[] leavesFound = new boolean[1];
         LinkedList<BlockPos> result =
                 recursiveSearch(level, start, (pos, bs, isRightBlock) -> {
-                    if (isLeaves(bs)) {
+                    if (state.is(BlockTags.WARPED_STEMS) && bs.is(BlockTags.WART_BLOCKS)) {
                         leavesFound[0] = true;
+                    } else {
+                        if (isLeaves(bs)) {
+                            leavesFound[0] = true;
+                        }
                     }
                     return true;
                 });
         return leavesFound[0] ? result : new LinkedList<>();
     }
 
-    // for internal use
     private interface BlockAction {
         boolean onBlock(BlockPos pos, BlockState state, boolean isRightBlock);
     }
 
-    // Recursively scan 3x3x3 cubes while keeping track of already scanned blocks to avoid cycles.
+    /**
+     *  Recursively scan 3x3x3 cubes while keeping track of already scanned blocks to avoid cycles.
+     *
+     *  @param action used internally to help us detect leaves. See {@link TreeEvents#scanForTree(LevelReader, BlockPos)}
+     * */
     private static LinkedList<BlockPos> recursiveSearch(LevelReader world, BlockPos start, @Nullable BlockAction action) {
         Block wantedBlock = world.getBlockState(start).getBlock();
         boolean abort = false;
@@ -165,9 +171,14 @@ public class TreeEvents {
         return !abort ? result : new LinkedList<>();
     }
 
-    // leaves detector
-    // Naturally generated leaves don't have BlockStateProperties.PERSISTENT property, meaning it's a real tree.
-    // If there is BlockStateProperties.PERSISTENT property, it means the leave block is placed by player, meaning it's not a natural tree.
+    /**
+     *  Check if given {@link BlockState} is instance of natural leave.<br>
+     *  Naturally generated leaves don't have {@link BlockStateProperties#PERSISTENT} property, meaning it's a real tree.<br>
+     *  If there is a {@link BlockStateProperties#PERSISTENT} property, it means the leave block is placed by player, meaning it's not a natural tree.
+     *
+     *  @param blockState block state to check
+     *  @return instance of leaves
+     * */
     private static boolean isLeaves(BlockState blockState) {
         if (blockState.getBlock() instanceof LeavesBlock) {
             Collection<Property<?>> properties = blockState.getProperties();
@@ -176,7 +187,7 @@ public class TreeEvents {
             }
             return true;
         } else {
-            return blockState.is(BlockTags.WART_BLOCKS);
+            return false;
         }
     }
 }
