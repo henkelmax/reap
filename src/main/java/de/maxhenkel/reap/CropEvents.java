@@ -78,7 +78,7 @@ public class CropEvents {
 
         world.setBlockAndUpdate(pos, newState);
 
-        ItemStack clickedBlockItem = state.getCloneItemStack(hitResult, world, pos, player);
+        ItemStack clickedBlockItem = state.getCloneItemStack(pos, world, true, player);
         for (ItemStack stack : drops) {
             if (stack.is(clickedBlockItem.getItem())) {
                 stack.shrink(1);
