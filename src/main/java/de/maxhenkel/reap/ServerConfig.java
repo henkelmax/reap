@@ -119,5 +119,4 @@ public class ServerConfig extends ConfigBase {
         groundTypes = groundTypesSpec.get().stream().map(s -> TagUtils.getBlock(s, true)).filter(Objects::nonNull).collect(Collectors.toList());
         allowedTreeTools = allowedTreeToolsSpec.get().stream().map(s -> TagUtils.getItem(s, true)).filter(Objects::nonNull).collect(Collectors.toList());
     }
-
 }
