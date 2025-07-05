@@ -38,7 +38,7 @@ public class CropEvents {
         BlockState state = world.getBlockState(pos);
         Block blockClicked = state.getBlock();
 
-        if (Main.SERVER_CONFIG.reapWhitelist.stream().noneMatch(tag -> tag.contains(state.getBlock()))) {
+        if (ReapMod.SERVER_CONFIG.reapWhitelist.stream().noneMatch(tag -> tag.contains(state.getBlock()))) {
             return false;
         }
 
@@ -58,7 +58,7 @@ public class CropEvents {
 
         LootParams.Builder context = new LootParams.Builder((ServerLevel) world).withParameter(LootContextParams.ORIGIN, new Vec3(pos.getX(), pos.getY(), pos.getZ())).withParameter(LootContextParams.BLOCK_STATE, state).withParameter(LootContextParams.THIS_ENTITY, player);
 
-        if (Main.SERVER_CONFIG.considerTool.get()) {
+        if (ReapMod.SERVER_CONFIG.considerTool.get()) {
             context.withParameter(LootContextParams.TOOL, player.getMainHandItem());
         } else {
             context.withParameter(LootContextParams.TOOL, ItemStack.EMPTY);

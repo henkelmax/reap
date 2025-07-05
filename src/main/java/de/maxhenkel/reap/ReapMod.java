@@ -3,26 +3,26 @@ package de.maxhenkel.reap;
 import de.maxhenkel.corelib.CommonRegistry;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
-@Mod(Main.MODID)
-public class Main {
+@Mod(ReapMod.MODID)
+@EventBusSubscriber(modid = ReapMod.MODID)
+public class ReapMod {
 
     public static final String MODID = "reap";
 
     public static ServerConfig SERVER_CONFIG;
 
-    public Main(IEventBus eventBus) {
-        eventBus.addListener(this::commonSetup);
-
+    public ReapMod(IEventBus eventBus) {
         SERVER_CONFIG = CommonRegistry.registerConfig(MODID, ModConfig.Type.SERVER, ServerConfig.class, true);
     }
 
     @SubscribeEvent
-    public void commonSetup(FMLCommonSetupEvent event) {
+    static void commonSetup(FMLCommonSetupEvent event) {
         NeoForge.EVENT_BUS.register(new CropEvents());
         NeoForge.EVENT_BUS.register(new TreeEvents());
     }

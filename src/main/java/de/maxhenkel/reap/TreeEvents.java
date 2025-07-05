@@ -19,7 +19,7 @@ public class TreeEvents {
     @SubscribeEvent
     public void onBlockBreak(BlockEvent.BreakEvent event) {
         Level world = (Level) event.getLevel();
-        if (!Main.SERVER_CONFIG.treeHarvest.get() || world.isClientSide()) {
+        if (!ReapMod.SERVER_CONFIG.treeHarvest.get() || world.isClientSide()) {
             return;
         }
         Player player = event.getPlayer();
@@ -32,7 +32,7 @@ public class TreeEvents {
 
     @SubscribeEvent
     public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-        if (!Main.SERVER_CONFIG.treeHarvest.get() || !Main.SERVER_CONFIG.dynamicTreeBreakingEnabled.get()) {
+        if (!ReapMod.SERVER_CONFIG.treeHarvest.get() || !ReapMod.SERVER_CONFIG.dynamicTreeBreakingEnabled.get()) {
             return;
         }
         Player player = event.getEntity();
@@ -42,7 +42,7 @@ public class TreeEvents {
         }
         if (canHarvest(pos, player, player.level(), player.getMainHandItem())) {
             List<BlockPos> connectedLogs = getConnectedLogs(player.level(), pos);
-            event.setNewSpeed((float) (event.getOriginalSpeed() / Math.min(1D + Main.SERVER_CONFIG.dynamicTreeBreakingPerLog.get() * connectedLogs.size(), Main.SERVER_CONFIG.dynamicTreeBreakingMinSpeed.get())));
+            event.setNewSpeed((float) (event.getOriginalSpeed() / Math.min(1D + ReapMod.SERVER_CONFIG.dynamicTreeBreakingPerLog.get() * connectedLogs.size(), ReapMod.SERVER_CONFIG.dynamicTreeBreakingMinSpeed.get())));
         }
     }
 
@@ -55,7 +55,7 @@ public class TreeEvents {
             return false;
         }
 
-        if (Main.SERVER_CONFIG.allowedTreeTools.stream().noneMatch(tag -> tag.contains(heldItem.getItem()))) {
+        if (ReapMod.SERVER_CONFIG.allowedTreeTools.stream().noneMatch(tag -> tag.contains(heldItem.getItem()))) {
             return false;
         }
 
@@ -92,7 +92,7 @@ public class TreeEvents {
     }
 
     private static void collectLogs(Level world, BlockPos pos, BlockPosList positions) {
-        int maxHarvestingCount = Main.SERVER_CONFIG.treeHarvestMaxCount.get();
+        int maxHarvestingCount = ReapMod.SERVER_CONFIG.treeHarvestMaxCount.get();
         if (positions.size() >= maxHarvestingCount) {
             return;
         }
@@ -121,12 +121,12 @@ public class TreeEvents {
 
     private static boolean isLog(Level world, BlockPos pos) {
         BlockState b = world.getBlockState(pos);
-        return Main.SERVER_CONFIG.logTypes.stream().anyMatch(tag -> tag.contains(b.getBlock()));
+        return ReapMod.SERVER_CONFIG.logTypes.stream().anyMatch(tag -> tag.contains(b.getBlock()));
     }
 
     private static boolean isGround(Level world, BlockPos pos) {
         BlockState b = world.getBlockState(pos);
-        return Main.SERVER_CONFIG.groundTypes.stream().anyMatch(tag -> tag.contains(b.getBlock()));
+        return ReapMod.SERVER_CONFIG.groundTypes.stream().anyMatch(tag -> tag.contains(b.getBlock()));
     }
 
     private static void destroy(Level world, Player player, BlockPos pos, ItemStack heldItem) {
