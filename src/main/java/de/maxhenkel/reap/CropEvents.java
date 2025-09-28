@@ -52,7 +52,7 @@ public class CropEvents {
             return false;
         }
 
-        if (world.isClientSide || !(world instanceof ServerLevel)) {
+        if (world.isClientSide() || !(world instanceof ServerLevel)) {
             return true;
         }
 
