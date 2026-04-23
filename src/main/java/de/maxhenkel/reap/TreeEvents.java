@@ -2,6 +2,7 @@ package de.maxhenkel.reap;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -9,7 +10,7 @@ import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.level.BlockEvent;
+import net.neoforged.neoforge.event.level.block.BreakBlockEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,16 +18,18 @@ import java.util.List;
 public class TreeEvents {
 
     @SubscribeEvent
-    public void onBlockBreak(BlockEvent.BreakEvent event) {
-        Level world = (Level) event.getLevel();
-        if (!ReapMod.SERVER_CONFIG.treeHarvest.get() || world.isClientSide()) {
+    public void onBlockBreak(BreakBlockEvent event) {
+        if (!(event.getLevel() instanceof ServerLevel level)) {
+            return;
+        }
+        if (!ReapMod.SERVER_CONFIG.treeHarvest.get()) {
             return;
         }
         Player player = event.getPlayer();
         BlockPos pos = event.getPos();
         ItemStack heldItem = player.getMainHandItem();
-        if (canHarvest(pos, player, world, heldItem)) {
-            destroyTree(player, world, pos, heldItem);
+        if (canHarvest(pos, player, level, heldItem)) {
+            destroyTree(player, level, pos, heldItem);
         }
     }
 
