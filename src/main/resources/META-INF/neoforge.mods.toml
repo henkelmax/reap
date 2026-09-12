@@ -8,7 +8,7 @@ version = "${mod_version}"
 displayName = "Reap Mod"
 updateJSONURL = "https://update.maxhenkel.de/neoforge/reap"
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/reap-mod"
-logoFile = "icon.png"
+bannerFile = "icon.png"
 authors = "Max Henkel"
 description = '''Harvest crops by right-clicking'''
 [[dependencies.reap]]

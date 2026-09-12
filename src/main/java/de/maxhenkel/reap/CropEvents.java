@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealSource;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.NetherWartBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -48,7 +49,7 @@ public class CropEvents {
             return false;
         }
 
-        if (growable.isValidBonemealTarget(world, pos, state)) {
+        if (growable.isValidBonemealTarget(world, pos, state, BonemealSource.INTERACTION)) {
             return false;
         }
 
@@ -101,17 +102,17 @@ public class CropEvents {
             return new BonemealableBlock() {
 
                 @Override
-                public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos pos, BlockState state) {
-                    return state.getValue(NetherWartBlock.AGE) < 3;
+                public boolean isValidBonemealTarget(LevelReader levelReader, BlockPos blockPos, BlockState blockState, BonemealSource bonemealSource) {
+                    return blockState.getValue(NetherWartBlock.AGE) < 3;
                 }
 
                 @Override
-                public boolean isBonemealSuccess(Level level, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
+                public boolean isBonemealSuccess(Level level, RandomSource randomSource, BlockPos blockPos, BlockState blockState, BonemealSource bonemealSource) {
                     return false;
                 }
 
                 @Override
-                public void performBonemeal(ServerLevel serverLevel, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
+                public void performBonemeal(ServerLevel serverLevel, RandomSource randomSource, BlockPos blockPos, BlockState blockState, BonemealSource bonemealSource) {
 
                 }
             };
